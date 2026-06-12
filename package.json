@@ -1,0 +1,21 @@
+{
+  "name": "aistudio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "node": "^26.3.0",
+    "node-telegram-bot-api": "^0.67.0",
+    "nodemon": "^3.1.14"
+  }
+}

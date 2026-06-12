@@ -1,0 +1,2649 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>ithub ai — AI Генерация Фото и Видео</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+
+/* ============================================================
+   ПЕРЕМЕННЫЕ
+   ============================================================ */
+:root {
+  --color-bg:      #f0ebe3;
+  --color-bg-warm: #ede8df;
+  --color-surface: #faf7f2;
+  --color-ink:     #1c1812;
+  --color-ink-mid: #3d3629;
+  --color-ink-muted: #6b6155;
+  --color-ink-faint: #9b9088;
+  --color-cream:   #faf7f2;
+  --color-gold:    #c4a882;
+  --color-gold-mid:#a08060;
+  --color-border:  rgba(40,32,22,.10);
+  --color-border-faint: rgba(40,32,22,.06);
+
+  --font-serif: 'DM Serif Display', serif;
+  --font-sans:  'DM Sans', sans-serif;
+
+  --radius-sm:   14px;
+  --radius-md:   22px;
+  --radius-pill: 100px;
+
+  --shadow-sm: 0 2px 24px rgba(40,32,22,.08);
+  --shadow-md: 0 8px 40px rgba(40,32,22,.13);
+  --shadow-lg: 0 20px 60px rgba(40,32,22,.20);
+
+  --ease-default: cubic-bezier(.4,0,.2,1);
+  --duration:     .28s;
+}
+
+/* ============================================================
+   СБРОС
+   ============================================================ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html  { scroll-behavior: auto; }
+body  { font-family:var(--font-sans); background:var(--color-bg); color:var(--color-ink-mid); line-height:1.6; overflow-x:hidden; cursor:default; }
+a     { text-decoration:none; color:inherit; }
+ul    { list-style:none; }
+button{ border:none; background:none; font-family:inherit; cursor:pointer; }
+img   { display:block; max-width:100%; }
+
+/* ============================================================
+   ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ
+   ============================================================ */
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+}
+
+.section {
+  padding: 7rem 0;
+}
+
+.section--warm {
+  background: var(--color-bg-warm);
+}
+
+.section__header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.label {
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--color-gold-mid);
+  margin-bottom: .9rem;
+}
+
+.heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem,4.5vw,3.2rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--color-ink);
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--color-gold-mid);
+}
+
+.subtext {
+  font-size: .98rem;
+  color: var(--color-ink-muted);
+  margin-top: .75rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  font-family: var(--font-sans);
+  font-size: .88rem;
+  font-weight: 600;
+  padding: .78rem 1.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  transition: transform var(--duration) var(--ease-default),
+              opacity var(--duration),
+              box-shadow var(--duration);
+}
+
+.button svg {
+  width:15px; height:15px;
+  flex-shrink:0;
+  transition: transform var(--duration);
+}
+
+.button:hover svg { transform: translateX(4px); }
+
+.button--dark {
+  background: var(--color-ink);
+  color: var(--color-cream);
+}
+
+.button--dark:hover {
+  opacity: .82;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(40,32,22,.22);
+}
+
+.button--outline {
+  background: transparent;
+  color: var(--color-ink-mid);
+  border-color: var(--color-border);
+}
+
+.button--outline:hover {
+  border-color: rgba(40,32,22,.3);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   НАВИГАЦИЯ
+   ============================================================ */
+.navbar {
+  position: fixed;
+  top:0; left:0; right:0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 3rem;
+  transition: background .3s, box-shadow .3s;
+}
+
+.navbar--scrolled {
+  background: rgba(240,235,227,.93);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 var(--color-border);
+}
+
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.navbar__logo-icon {
+  width: 28px; height: 28px;
+  border: 2px solid var(--color-ink);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__logo-icon::after {
+  content: '';
+  width: 7px; height: 7px;
+  background: var(--color-ink);
+  border-radius: 50%;
+}
+
+.navbar__links {
+  display: flex;
+  gap: 2rem;
+}
+
+.navbar__link {
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  position: relative;
+  transition: color var(--duration);
+}
+
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0;
+  width: 0; height: 1px;
+  background: var(--color-gold-mid);
+  transition: width .3s var(--ease-default);
+}
+
+.navbar__link:hover { color: var(--color-ink); }
+.navbar__link:hover::after { width: 100%; }
+
+.navbar__cta {
+  font-size: .82rem;
+  font-weight: 600;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  padding: .5rem 1.2rem;
+  border-radius: var(--radius-pill);
+  transition: opacity var(--duration), transform var(--duration);
+}
+
+.navbar__cta:hover { opacity: .8; transform: scale(1.04); }
+
+.navbar__burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 3px;
+}
+
+.navbar__burger span {
+  display: block;
+  width: 22px; height: 1.5px;
+  background: var(--color-ink);
+  border-radius: 2px;
+  transition: .3s;
+}
+
+.navbar__burger--open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.navbar__burger--open span:nth-child(2) { opacity: 0; }
+.navbar__burger--open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ============================================================
+   МОБИЛЬНОЕ МЕНЮ
+   ============================================================ */
+.mobile_menu {
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg);
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-100%);
+  transition: transform .4s var(--ease-default);
+}
+
+.mobile_menu--open { transform: translateX(0); }
+
+.mobile_menu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  text-align: center;
+}
+
+.mobile_menu a {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  color: var(--color-ink);
+  transition: color var(--duration);
+}
+
+.mobile_menu a:hover { color: var(--color-gold-mid); }
+
+/* ============================================================
+   HERO (ГЛАВНЫЙ ЭКРАН)
+   ============================================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 8rem 0 5rem;
+}
+
+.hero__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: .4;
+}
+
+.hero__blob--1 {
+  width:700px; height:700px;
+  background: radial-gradient(circle,#d4c4a8,transparent 70%);
+  top:-150px; right:-150px;
+  animation: blob1 18s ease-in-out infinite alternate;
+}
+
+.hero__blob--2 {
+  width:500px; height:500px;
+  background: radial-gradient(circle,#c8b898,transparent 70%);
+  bottom:-80px; left:-80px;
+  animation: blob2 22s ease-in-out infinite alternate;
+}
+
+.hero__blob--3 {
+  width:400px; height:400px;
+  background: radial-gradient(circle,#a08060,transparent 70%);
+  top:40%; left:40%; opacity:.2;
+  animation: blob3 25s ease-in-out infinite alternate;
+}
+
+@keyframes blob1 { from{transform:translate(0,0) scale(1)} to{transform:translate(-40px,40px) scale(1.1)} }
+@keyframes blob2 { from{transform:translate(0,0) scale(1)} to{transform:translate(50px,-30px) scale(1.15)} }
+@keyframes blob3 { from{transform:translate(0,0) scale(1)} to{transform:translate(-30px,50px) scale(.9)} }
+
+.hero__body {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+}
+
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  background: rgba(40,32,22,.07);
+  border: 1px solid var(--color-border);
+  padding: .38rem .95rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 2rem;
+}
+
+.hero__badge-dot {
+  width: 6px; height: 6px;
+  background: var(--color-gold-mid);
+  border-radius: 50%;
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.5; transform:scale(.8); }
+}
+
+.hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem,7.5vw,5.8rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--color-ink);
+  letter-spacing: -.02em;
+  margin-bottom: 1.5rem;
+}
+
+.hero__title em { font-style:italic; color:var(--color-gold-mid); }
+
+.hero__text {
+  font-size: 1.05rem;
+  color: var(--color-ink-muted);
+  line-height: 1.75;
+  margin-bottom: 2.5rem;
+  max-width: 520px;
+}
+
+.hero__buttons {
+  display: flex;
+  gap: .85rem;
+  flex-wrap: wrap;
+  margin-bottom: 3.5rem;
+}
+
+.hero__stats {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat__number {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  color: var(--color-ink);
+  line-height: 1;
+}
+
+.stat__label {
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--color-ink-faint);
+  margin-top: .25rem;
+}
+
+.hero__scroll {
+  position: absolute;
+  bottom: 2.5rem; left: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  z-index: 2;
+}
+
+.hero__scroll-line {
+  width: 1px; height: 55px;
+  background: linear-gradient(to bottom,var(--color-ink),transparent);
+  animation: scroll-anim 2.2s ease-in-out infinite;
+}
+
+@keyframes scroll-anim {
+  0%,100% { opacity:.2; transform:scaleY(.5); transform-origin:top; }
+  50%      { opacity:.8; transform:scaleY(1); }
+}
+
+/* ============================================================
+   О НАС
+   ============================================================ */
+.about_us__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.about_us__card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.about_us__card::before {
+  content: '';
+  position: absolute;
+  top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg,var(--color-gold),var(--color-gold-mid));
+}
+
+.about_us__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1.8rem;
+}
+
+.about_us__stat {
+  text-align: center;
+  padding: 1.4rem 1rem;
+  background: var(--color-bg-warm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: transform var(--duration), box-shadow var(--duration);
+}
+
+.about_us__stat:hover { transform:translateY(-3px); box-shadow:var(--shadow-sm); }
+
+.about_us__stat-number {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  color: var(--color-ink);
+  line-height: 1;
+  margin-bottom: .3rem;
+}
+
+.about_us__stat-number em {
+  font-style: italic;
+  color: var(--color-gold-mid);
+  font-size: 1.3rem;
+}
+
+.about_us__stat-label {
+  font-size: .75rem;
+  color: var(--color-ink-muted);
+  font-weight: 500;
+}
+
+.about_us__tools-title {
+  font-size: .68rem;
+  color: var(--color-ink-faint);
+  margin-bottom: .75rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.about_us__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.about_us__tool {
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  padding: .3rem .75rem;
+  border-radius: var(--radius-pill);
+  transition: color var(--duration), border-color var(--duration), transform .2s;
+}
+
+.about_us__tool:hover {
+  color: var(--color-ink);
+  border-color: rgba(40,32,22,.28);
+  transform: translateY(-2px);
+}
+
+.about_us__text p {
+  font-size: .97rem;
+  color: var(--color-ink-muted);
+  line-height: 1.8;
+  margin-bottom: .9rem;
+}
+
+.about_us__text p strong { color:var(--color-ink); font-weight:600; }
+
+.about_us__features {
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  margin-top: 1.5rem;
+}
+
+.about_us__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: .9rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.3rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration), box-shadow var(--duration);
+}
+
+.about_us__feature:hover { transform:translateX(6px); box-shadow:var(--shadow-md); }
+
+.about_us__feature-icon {
+  width: 40px; height: 40px;
+  background: var(--color-bg-warm);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: .85rem;
+  color: var(--color-gold-mid);
+  font-weight: 700;
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+.about_us__feature-body strong {
+  display: block;
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: .92rem;
+  margin-bottom: .15rem;
+}
+
+.about_us__feature-body p { font-size:.82rem; color:var(--color-ink-muted); }
+
+/* ============================================================
+   НАШИ УСЛУГИ
+   ============================================================ */
+.our_services__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.our_services__item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+}
+
+.our_services__item:hover { box-shadow: var(--shadow-md); }
+
+.our_services__item--reversed { direction: rtl; }
+.our_services__item--reversed > * { direction: ltr; }
+
+.our_services__item--dark .our_services__info { background: var(--color-ink); }
+.our_services__item--dark .our_services__visual { background:#2c2519; border-color:rgba(255,255,255,.08); }
+.our_services__item--dark .our_services__title { color:var(--color-cream); }
+.our_services__item--dark .our_services__description { color:rgba(255,255,255,.65); }
+.our_services__item--dark .our_services__list-item { color:rgba(255,255,255,.7); }
+.our_services__item--dark .our_services__list-item::before { color:var(--color-gold); }
+.our_services__item--dark .our_services__price { background:rgba(255,255,255,.1); color:var(--color-gold); border-color:rgba(255,255,255,.15); }
+.our_services__item--dark .our_services__visual-number { color:var(--color-gold); }
+.our_services__item--dark .our_services__icon { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.12); color:var(--color-gold); }
+
+.our_services__info {
+  padding: 2.2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.our_services__visual {
+  position: relative;
+  min-height: 240px;
+  background: var(--color-bg-warm);
+  border-left: 1px solid var(--color-border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.our_services__item--reversed .our_services__visual {
+  border-left: none;
+  border-right: 1px solid var(--color-border);
+}
+
+.our_services__visual-dots {
+  position: absolute;
+  inset: 0;
+  opacity: .12;
+  background-image: radial-gradient(circle,var(--color-gold-mid) 1px,transparent 1px);
+  background-size: 28px 28px;
+}
+
+.our_services__visual-lines {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.our_services__visual-lines span {
+  position: absolute;
+  left:0; right:0; height:1px;
+  background: linear-gradient(90deg,transparent,var(--color-gold),transparent);
+  opacity: .25;
+}
+
+.our_services__visual-lines span:nth-child(1) { top:25%; }
+.our_services__visual-lines span:nth-child(2) { top:50%; opacity:.4; }
+.our_services__visual-lines span:nth-child(3) { top:75%; }
+
+.our_services__visual-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.our_services__visual-number {
+  font-family: var(--font-serif);
+  font-size: 5rem;
+  color: var(--color-gold-mid);
+  line-height: 1;
+  opacity: .25;
+  margin-bottom: .3rem;
+}
+
+.our_services__visual-label {
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+
+.our_services__badge {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  background: var(--color-gold-mid);
+  color: var(--color-cream);
+  padding: .22rem .65rem;
+  border-radius: var(--radius-pill);
+}
+
+.our_services__icon {
+  width: 44px; height: 44px;
+  background: var(--color-bg-warm);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: .9rem;
+  font-size: .8rem;
+  color: var(--color-gold-mid);
+  font-weight: 700;
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+.our_services__title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  color: var(--color-ink);
+  margin-bottom: .55rem;
+  line-height: 1.2;
+}
+
+.our_services__description {
+  font-size: .88rem;
+  color: var(--color-ink-muted);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+
+.our_services__features {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  margin-bottom: 1.1rem;
+}
+
+.our_services__list-item {
+  font-size: .82rem;
+  color: var(--color-ink-muted);
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+.our_services__list-item::before {
+  content: '→';
+  color: var(--color-gold-mid);
+  font-size: .74rem;
+  flex-shrink: 0;
+}
+
+.our_services__price {
+  display: inline-block;
+  font-size: .74rem;
+  font-weight: 600;
+  color: var(--color-gold-mid);
+  background: rgba(160,128,96,.1);
+  border: 1px solid rgba(160,128,96,.25);
+  padding: .26rem .78rem;
+  border-radius: var(--radius-pill);
+}
+
+/* ============================================================
+   НАШИ ПРОЕКТЫ (скролл-секция)
+   ============================================================ */
+.our_projects {
+  position: relative;
+  height: 500vh;
+}
+
+.our_projects__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.our_projects__video_bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.our_projects__video_bg video {
+  width:100%; height:100%;
+  object-fit: cover;
+}
+
+/* Заглушка пока нет видео */
+.our_projects__placeholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,#1c1812,#2c2519 40%,#3d3629);
+  overflow: hidden;
+}
+
+.our_projects__placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle,rgba(196,168,130,.09) 1px,transparent 1px);
+  background-size: 44px 44px;
+  animation: grid-move 25s linear infinite;
+}
+
+.our_projects__placeholder::after {
+  content: '';
+  position: absolute;
+  top:-100%; left:0; right:0; height:100%;
+  background: linear-gradient(180deg,transparent,rgba(196,168,130,.04) 50%,transparent);
+  animation: sweep 5s ease-in-out infinite;
+}
+
+@keyframes grid-move { from{transform:translate(0,0)} to{transform:translate(44px,44px)} }
+@keyframes sweep     { 0%,100%{top:-100%} 50%{top:100%} }
+
+.our_projects__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,rgba(28,24,18,.82),rgba(28,24,18,.58) 50%,rgba(28,24,18,.78));
+  z-index: 1;
+}
+
+.our_projects__progress {
+  position: absolute;
+  top:0; left:0; right:0;
+  height: 3px;
+  background: rgba(255,255,255,.1);
+  z-index: 4;
+}
+
+.our_projects__progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right,var(--color-gold),var(--color-gold-mid));
+  transition: width .1s linear;
+}
+
+.our_projects__header {
+  position: absolute;
+  top:2.5rem; left:50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 3;
+  width: 100%;
+}
+
+.our_projects__header .label { color:var(--color-gold); }
+.our_projects__header .heading { color:#faf7f2; }
+.our_projects__header .heading em { color:var(--color-gold); }
+
+.our_projects__slides {
+  position: relative;
+  width:100%; height:100%;
+  z-index: 2;
+}
+
+.project_slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7rem 0 4rem;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.project_slide--active { opacity:1; pointer-events:all; }
+
+.project_slide__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  width: 100%;
+}
+
+.project_slide__text { color:#faf7f2; }
+
+.project_slide__number {
+  display: block;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: .85rem;
+  color: var(--color-gold);
+  opacity: .8;
+  margin-bottom: 1rem;
+}
+
+.project_slide__category {
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  margin-bottom: .6rem;
+}
+
+.project_slide__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem,3.5vw,3rem);
+  line-height: 1.1;
+  color: #faf7f2;
+  margin-bottom: 1rem;
+}
+
+.project_slide__description {
+  font-size: .95rem;
+  color: rgba(255,255,255,.72);
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+}
+
+.project_slide__tags { display:flex; flex-wrap:wrap; gap:.5rem; }
+
+.project_slide__tag {
+  font-size: .72rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.7);
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  padding: .24rem .68rem;
+  border-radius: var(--radius-pill);
+}
+
+.project_slide__media { position:relative; }
+
+.project_slide__image_placeholder {
+  aspect-ratio: 4/3;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.project_slide__image_label {
+  font-size: .72rem;
+  color: rgba(255,255,255,.35);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.our_projects__dots {
+  position: absolute;
+  bottom:2.5rem; left:50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: .6rem;
+  z-index: 4;
+}
+
+.our_projects__dot {
+  width:6px; height:6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.3);
+  border: 1px solid rgba(255,255,255,.4);
+  cursor: pointer;
+  transition: background .4s, width .4s, border-radius .4s;
+}
+
+.our_projects__dot--active {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  width: 24px;
+  border-radius: 3px;
+}
+
+.our_projects__counter {
+  position: absolute;
+  bottom:2.5rem; right:3rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: .85rem;
+  color: rgba(255,255,255,.5);
+  z-index: 4;
+}
+
+/* ============================================================
+   ГАЛЕРЕЯ (разброс при скролле)
+   ============================================================ */
+.gallery {
+  height: 280vh;
+  position: relative;
+}
+
+.gallery__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-warm);
+}
+
+/* Подсказка по центру — всегда поверх карточек */
+.gallery__hint {
+  position: absolute;
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  z-index: 30;
+  text-align: center;
+  pointer-events: none;
+  background: rgba(237,232,223,.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 8px 40px rgba(40,32,22,.15);
+  width: 240px;
+}
+
+.gallery__hint .label { color:var(--color-gold-mid); font-size:.7rem; margin-bottom:.4rem; }
+
+.gallery__hint-heading {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--color-ink);
+  line-height: 1.3;
+}
+
+.gallery__hint-heading em { font-style:italic; color:var(--color-gold-mid); }
+
+.gallery__hint-sub {
+  font-size: .78rem;
+  color: var(--color-ink-muted);
+  margin-top: .4rem;
+}
+
+/* Поле карточек */
+.gallery__field {
+  position: relative;
+  width:100%; height:100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Карточка галереи */
+.gallery__card {
+  position: absolute;
+  width: 200px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  border: 2px solid rgba(255,255,255,.8);
+  background: var(--color-surface);
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  z-index: 5;
+  transition: box-shadow .3s var(--ease-default);
+}
+
+.gallery__card:hover {
+  box-shadow: var(--shadow-lg);
+  z-index: 25;
+}
+
+.gallery__card-image {
+  width:100%;
+  aspect-ratio: 3/4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.6rem;
+  color: rgba(255,255,255,.2);
+  position: relative;
+}
+
+.gallery__card-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size: 16px 16px;
+}
+
+.gallery__card-image img {
+  position: absolute;
+  inset: 0;
+  width:100%; height:100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery__card-label {
+  padding: .55rem .85rem;
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ============================================================
+   ЛАЙТБОКС
+   ============================================================ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(28,24,18,.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s;
+}
+
+.lightbox--open { opacity:1; pointer-events:all; }
+
+.lightbox__box {
+  max-width: 880px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.lightbox__close {
+  position: absolute;
+  top:1rem; right:1rem;
+  width:36px; height:36px;
+  background: var(--color-bg-warm);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 2;
+  color: var(--color-ink);
+  transition: background var(--duration), transform var(--duration);
+}
+
+.lightbox__close:hover { background:var(--color-ink); color:var(--color-cream); transform:rotate(90deg); }
+
+.lightbox__box--left   { display:grid; grid-template-columns:1fr 1fr; }
+.lightbox__box--right  { display:grid; grid-template-columns:1fr 1fr; }
+.lightbox__box--top    { display:flex; flex-direction:column; }
+.lightbox__box--bottom { display:flex; flex-direction:column-reverse; }
+
+.lightbox__image {
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 2rem;
+  color: rgba(255,255,255,.25);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.lightbox__box--right  .lightbox__image { border-radius:0 var(--radius-md) var(--radius-md) 0; order:2; }
+.lightbox__box--top    .lightbox__image { border-radius:var(--radius-md) var(--radius-md) 0 0; min-height:220px; }
+.lightbox__box--bottom .lightbox__image { border-radius:0 0 var(--radius-md) var(--radius-md); min-height:220px; }
+
+.lightbox__content {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lightbox__box--right .lightbox__content { order:1; }
+
+.lightbox__category {
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--color-gold-mid);
+  margin-bottom: .6rem;
+}
+
+.lightbox__title {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  color: var(--color-ink);
+  margin-bottom: .8rem;
+  line-height: 1.2;
+}
+
+.lightbox__text {
+  font-size: .9rem;
+  color: var(--color-ink-muted);
+  line-height: 1.75;
+  margin-bottom: 1.2rem;
+}
+
+.lightbox__tags { display:flex; flex-wrap:wrap; gap:.4rem; }
+
+.lightbox__tag {
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  background: var(--color-bg-warm);
+  border: 1px solid var(--color-border);
+  padding: .22rem .65rem;
+  border-radius: var(--radius-pill);
+}
+
+/* ============================================================
+   ПРАЙС-ЛИСТ
+   ============================================================ */
+.pricing {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.pricing__block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.2rem;
+}
+
+.pricing__block-header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: 1.4rem 2rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-warm);
+}
+
+.pricing__block-title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--color-ink);
+}
+
+.pricing__rows { padding:.5rem 0; }
+
+.pricing__row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .85rem 2rem;
+  border-bottom: 1px solid var(--color-border-faint);
+  transition: background var(--duration);
+}
+
+.pricing__row:last-child { border-bottom:none; }
+.pricing__row:hover { background:var(--color-bg-warm); }
+
+.pricing__row-name {
+  font-size: .92rem;
+  color: var(--color-ink-mid);
+  flex: 1;
+}
+
+.pricing__row-name small {
+  display: block;
+  font-size: .74rem;
+  color: var(--color-ink-faint);
+  margin-top: .1rem;
+}
+
+.pricing__row-dots {
+  flex: 1;
+  height: 1px;
+  max-width: 80px;
+  background: repeating-linear-gradient(to right,var(--color-border) 0,var(--color-border) 4px,transparent 4px,transparent 10px);
+}
+
+.pricing__row-price {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--color-ink);
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+/* ============================================================
+   КАК МЫ РАБОТАЕМ
+   ============================================================ */
+.how_we_work__steps {
+  display: flex;
+  align-items: flex-start;
+}
+
+.how_we_work__step {
+  flex: 1;
+  padding: 1.8rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration), box-shadow var(--duration);
+}
+
+.how_we_work__step:hover { transform:translateY(-5px); box-shadow:var(--shadow-md); }
+
+.how_we_work__connector {
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-border);
+  align-self: center;
+  flex-shrink: 0;
+}
+
+.how_we_work__step-number {
+  display: block;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: .9rem;
+  color: var(--color-gold-mid);
+  margin-bottom: .8rem;
+}
+
+.how_we_work__step-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--color-ink);
+  margin-bottom: .45rem;
+}
+
+.how_we_work__step-text {
+  font-size: .83rem;
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   КОНТАКТЫ
+   ============================================================ */
+.contact_us__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.contact_us__description {
+  color: var(--color-ink-muted);
+  line-height: 1.75;
+  margin: 1rem 0 2rem;
+  font-size: .96rem;
+}
+
+.contact_us__links { display:flex; flex-direction:column; gap:.85rem; }
+
+.contact_us__link {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.2rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration), box-shadow var(--duration), border-color var(--duration);
+}
+
+.contact_us__link:hover {
+  transform: translateX(6px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(40,32,22,.22);
+}
+
+.contact_us__link-icon {
+  width:40px; height:40px;
+  background: var(--color-bg-warm);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: .85rem;
+  color: var(--color-gold-mid);
+  font-weight: 700;
+  font-style: italic;
+  font-family: var(--font-serif);
+}
+
+.contact_us__link strong {
+  display: block;
+  font-size: .88rem;
+  color: var(--color-ink);
+  font-weight: 600;
+  margin-bottom: .1rem;
+}
+
+.contact_us__link span { font-size:.76rem; color:var(--color-ink-faint); }
+
+.contact_us__card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.8rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.contact_us__card p {
+  font-size: .9rem;
+  color: var(--color-ink-muted);
+  line-height: 1.75;
+  margin-bottom: .9rem;
+}
+
+.contact_us__card p strong { color:var(--color-ink); font-weight:600; }
+
+/* ============================================================
+   ПОДВАЛ
+   ============================================================ */
+.site_footer {
+  padding: 2rem 0;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-warm);
+}
+
+.site_footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.site_footer__logo {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--color-ink-mid);
+}
+
+.site_footer__logo-icon {
+  width:24px; height:24px;
+  border: 1.5px solid var(--color-ink-muted);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site_footer__logo-icon::after {
+  content: '';
+  width:5px; height:5px;
+  background: var(--color-ink-muted);
+  border-radius: 50%;
+}
+
+.site_footer__copy { font-size:.72rem; color:var(--color-ink-faint); }
+
+/* ============================================================
+   АДАПТИВНОСТЬ — ПЛАНШЕТЫ (≤1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .container { padding: 0 1.5rem; }
+  .navbar { padding: 1rem 1.5rem; }
+  .navbar__links { display: none; }
+  .navbar__cta { display: none; }
+  .navbar__burger { display: flex; }
+
+  .hero__scroll { display: none; }
+  .about_us__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .contact_us__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+
+  .our_services__item {
+    grid-template-columns: 1fr;
+  }
+  .our_services__item--reversed {
+    direction: ltr;
+  }
+  .our_services__visual {
+    min-height: 180px;
+    border-left: none;
+    border-top: 1px solid var(--color-border);
+  }
+  .our_services__item--reversed .our_services__visual {
+    border-right: none;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .project_slide__inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .project_slide__media {
+    order: -1;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .project_slide__text {
+    text-align: center;
+  }
+  .project_slide__tags {
+    justify-content: center;
+  }
+
+  .how_we_work__steps {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .how_we_work__connector {
+    display: none;
+  }
+  .how_we_work__step {
+    flex: 1 1 calc(50% - 1rem);
+    min-width: 250px;
+  }
+
+  .gallery__card {
+    width: 160px;
+  }
+  .lightbox__box--left,
+  .lightbox__box--right {
+    grid-template-columns: 1fr;
+  }
+  .lightbox__box--right .lightbox__image {
+    order: -1;
+  }
+  .lightbox__image {
+    min-height: 220px;
+    border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+  }
+}
+
+/* ============================================================
+   АДАПТИВНОСТЬ — МОБИЛЬНЫЕ (≤640px)
+   ============================================================ */
+@media (max-width: 640px) {
+  .section {
+    padding: 4rem 0;
+  }
+  .container {
+    padding: 0 1.2rem;
+  }
+  .navbar {
+    padding: 0.9rem 1.2rem;
+  }
+
+  .hero {
+    padding: 6rem 0 3rem;
+    min-height: auto;
+  }
+  .hero__title {
+    font-size: clamp(2.2rem, 9vw, 3.2rem);
+  }
+  .hero__text {
+    font-size: 0.92rem;
+  }
+  .hero__stats {
+    gap: 1.5rem;
+  }
+  .stat__number {
+    font-size: 1.8rem;
+  }
+  .hero__buttons {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .about_us__card {
+    padding: 1.5rem;
+  }
+  .about_us__stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+  .about_us__stat {
+    padding: 1rem 0.5rem;
+  }
+  .about_us__stat-number {
+    font-size: 1.6rem;
+  }
+  .about_us__features {
+    gap: 0.6rem;
+  }
+  .about_us__feature {
+    padding: 0.9rem 1rem;
+  }
+
+  .our_services__info {
+    padding: 1.5rem;
+  }
+  .our_services__visual {
+    min-height: 140px;
+  }
+  .our_services__visual-number {
+    font-size: 3.5rem;
+  }
+
+  .our_projects {
+    height: 400vh;
+  }
+  .our_projects__header {
+    top: 1.5rem;
+  }
+  .project_slide {
+    padding: 5rem 0 2rem;
+  }
+  .project_slide__title {
+    font-size: 1.5rem;
+  }
+  .project_slide__description {
+    font-size: 0.85rem;
+  }
+  .our_projects__dots {
+    bottom: 1.5rem;
+  }
+  .our_projects__counter {
+    bottom: 1.5rem;
+    right: 1.2rem;
+    font-size: 0.75rem;
+  }
+
+  .gallery {
+    height: 220vh;
+  }
+  .gallery__hint {
+    width: 200px;
+    padding: 1.2rem 1.5rem;
+  }
+  .gallery__card {
+    width: 130px;
+  }
+  .gallery__card-label {
+    font-size: 0.65rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .pricing__block-header {
+    padding: 1rem 1.2rem;
+  }
+  .pricing__row {
+    padding: 0.7rem 1.2rem;
+    flex-wrap: wrap;
+  }
+  .pricing__row-dots {
+    display: none;
+  }
+  .pricing__row-price {
+    width: 100%;
+    text-align: right;
+    margin-top: 0.2rem;
+  }
+
+  .how_we_work__step {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .contact_us__card {
+    padding: 1.5rem;
+  }
+  .lightbox__content {
+    padding: 1.5rem;
+  }
+  .lightbox__title {
+    font-size: 1.3rem;
+  }
+
+  .site_footer__inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- НАВБАР -->
+<nav class="navbar" id="navbar">
+  <a href="#" class="navbar__logo">
+    <div class="navbar__logo-icon"></div>
+    ithub ai
+  </a>
+  <ul class="navbar__links">
+    <li><a href="#about_us"       class="navbar__link">О нас</a></li>
+    <li><a href="#our_services"   class="navbar__link">Услуги</a></li>
+    <li><a href="#our_projects"   class="navbar__link">Проекты</a></li>
+    <li><a href="#pricing"        class="navbar__link">Цены</a></li>
+    <li><a href="#how_we_work"    class="navbar__link">Процесс</a></li>
+    <li><a href="#contact_us"     class="navbar__link">Контакт</a></li>
+  </ul>
+  <a href="#contact_us" class="navbar__cta">Заказать →</a>
+  <button class="navbar__burger" id="burger_btn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- МОБИЛЬНОЕ МЕНЮ -->
+<div class="mobile_menu" id="mobile_menu">
+  <ul>
+    <li><a href="#about_us"     onclick="closeMobileMenu()">О нас</a></li>
+    <li><a href="#our_services" onclick="closeMobileMenu()">Услуги</a></li>
+    <li><a href="#our_projects" onclick="closeMobileMenu()">Проекты</a></li>
+    <li><a href="#pricing"      onclick="closeMobileMenu()">Цены</a></li>
+    <li><a href="#how_we_work"  onclick="closeMobileMenu()">Процесс</a></li>
+    <li><a href="#contact_us"   onclick="closeMobileMenu()">Контакт</a></li>
+  </ul>
+</div>
+
+<!-- HERO — главный экран -->
+<section class="hero" id="hero">
+  <div class="hero__blob hero__blob--1"></div>
+  <div class="hero__blob hero__blob--2"></div>
+  <div class="hero__blob hero__blob--3"></div>
+  <div class="hero__body container">
+    <div class="hero__badge">
+      <div class="hero__badge-dot"></div>
+      AI · Генерация · Студия
+    </div>
+    <h1 class="hero__title">
+      Создаём визуальный<br>
+      <em>контент с помощью</em><br>
+      искусственного интеллекта
+    </h1>
+    <p class="hero__text">
+      Реалистичные фото, кинематографические видео, аватары и рекламные материалы —
+      без фотоаппарата и съёмочной группы. Работаем быстро: от 2 до 48 часов.
+    </p>
+    <div class="hero__buttons">
+      <a href="#contact_us" class="button button--dark">
+        Заказать
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="#pricing" class="button button--outline">Смотреть цены</a>
+    </div>
+    <div class="hero__stats">
+      <div class="stat"><span class="stat__number">500+</span><span class="stat__label">Выполненных заказов</span></div>
+      <div class="stat"><span class="stat__number">98%</span><span class="stat__label">Довольных клиентов</span></div>
+      <div class="stat"><span class="stat__number">24ч</span><span class="stat__label">Срок выполнения</span></div>
+    </div>
+  </div>
+  <div class="hero__scroll"><div class="hero__scroll-line"></div></div>
+</section>
+
+<!-- О НАС -->
+<section class="section section--warm" id="about_us">
+  <div class="container">
+    <div class="about_us__grid">
+
+      <div id="about_left">
+        <div class="about_us__card">
+          <div class="about_us__stats">
+            <div class="about_us__stat">
+              <div class="about_us__stat-number">500<em>+</em></div>
+              <div class="about_us__stat-label">Заказов</div>
+            </div>
+            <div class="about_us__stat">
+              <div class="about_us__stat-number">98<em>%</em></div>
+              <div class="about_us__stat-label">Довольных</div>
+            </div>
+            <div class="about_us__stat">
+              <div class="about_us__stat-number">24<em>ч</em></div>
+              <div class="about_us__stat-label">Средний срок</div>
+            </div>
+            <div class="about_us__stat">
+              <div class="about_us__stat-number">8<em>+</em></div>
+              <div class="about_us__stat-label">Инструментов</div>
+            </div>
+          </div>
+          <div class="about_us__tools-title">Что мы создаём</div>
+          <div class="about_us__tools">
+            <span class="about_us__tool">AI Фото</span>
+            <span class="about_us__tool">AI Видео</span>
+            <span class="about_us__tool">AI Аватары</span>
+            <span class="about_us__tool">Видеореклама</span>
+            <span class="about_us__tool">AI Анимация</span>
+            <span class="about_us__tool">Фотореализм</span>
+            <span class="about_us__tool">AI Брендинг</span>
+            <span class="about_us__tool">AI Персонажи</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about_us__text" id="about_right">
+        <div class="label">О студии</div>
+        <h2 class="heading">ithub ai —<br><em>ваш AI&#8209;отдел</em></h2>
+        <p style="margin-top:1rem">
+          Мы — студия в экосистеме <strong>IThub</strong>, специализирующаяся
+          на создании контента с помощью искусственного интеллекта.
+          От концепции до готового результата.
+        </p>
+        <p>
+          Работаем с новейшими AI-инструментами: реалистичные фото,
+          кинематографические видео, аватары, рекламный контент.
+          Принимаем заказы любой сложности и срочности.
+        </p>
+        <div class="about_us__features">
+          <div class="about_us__feature">
+            <div class="about_us__feature-icon">I</div>
+            <div class="about_us__feature-body">
+              <strong>Быстро</strong>
+              <p>Выполняем заказы от 2 до 48 часов — от аватарки до рекламного ролика</p>
+            </div>
+          </div>
+          <div class="about_us__feature">
+            <div class="about_us__feature-icon">II</div>
+            <div class="about_us__feature-body">
+              <strong>Точно</strong>
+              <p>До 3 правок включено в каждый заказ. Работаем до вашего одобрения</p>
+            </div>
+          </div>
+          <div class="about_us__feature">
+            <div class="about_us__feature-icon">III</div>
+            <div class="about_us__feature-body">
+              <strong>Конфиденциально</strong>
+              <p>NDA по запросу. Ваши материалы под надёжной защитой</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- НАШИ УСЛУГИ -->
+<section class="section" id="our_services">
+  <div class="container">
+    <div class="section__header" id="services_header">
+      <div class="label">Что мы делаем</div>
+      <h2 class="heading">Наши <em>услуги</em></h2>
+      <p class="subtext">Полный спектр AI-генерации визуального контента для бизнеса и частных задач</p>
+    </div>
+    <div class="our_services__list">
+
+      <div class="our_services__item" data-direction="left">
+        <div class="our_services__info">
+          <div class="our_services__icon">AI</div>
+          <h3 class="our_services__title">AI Фотографии</h3>
+          <p class="our_services__description">Реалистичные портреты, продуктовые снимки, пейзажи и концепт-арт — полностью через AI. Никаких фотоаппаратов и студий, результат за несколько часов.</p>
+          <ul class="our_services__features">
+            <li class="our_services__list-item">Профессиональный портрет (1 изображение)</li>
+            <li class="our_services__list-item">Фото альбом — 20 уникальных кадров</li>
+            <li class="our_services__list-item">Карточки товаров для Wildberries</li>
+            <li class="our_services__list-item">Рекламные визуалы под брендинг</li>
+          </ul>
+          <div class="our_services__price">от 100 ₽</div>
+        </div>
+        <div class="our_services__visual">
+          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-dots"></div>
+          <div class="our_services__visual-content">
+            <div class="our_services__visual-number">01</div>
+            <div class="our_services__visual-label">AI Photography</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="our_services__item our_services__item--reversed our_services__item--dark" data-direction="right">
+        <div class="our_services__badge">Хит</div>
+        <div class="our_services__info">
+          <div class="our_services__icon">vid</div>
+          <h3 class="our_services__title">AI Видео</h3>
+          <p class="our_services__description">Кинематографические рекламные ролики, вирусные рилсы и TikTok-видео с AI-генерацией каждого кадра. Без съёмочной группы — чисто, дёшево, быстро.</p>
+          <ul class="our_services__features">
+            <li class="our_services__list-item">Видеореклама от 10 секунд</li>
+            <li class="our_services__list-item">Рилсы и TikTok-ролики (30 сек)</li>
+            <li class="our_services__list-item">Анимация логотипа и моушн-графика</li>
+            <li class="our_services__list-item">AI-аватар ведущего</li>
+          </ul>
+          <div class="our_services__price">от 2 000 ₽</div>
+        </div>
+        <div class="our_services__visual">
+          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-dots"></div>
+          <div class="our_services__visual-content">
+            <div class="our_services__visual-number">02</div>
+            <div class="our_services__visual-label">AI Video</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="our_services__item" data-direction="left">
+        <div class="our_services__info">
+          <div class="our_services__icon">av</div>
+          <h3 class="our_services__title">Аватарки и персонажи</h3>
+          <p class="our_services__description">Уникальные AI-аватары с участием вашего лица для соцсетей, профилей и брендинга. Оживляем фотографии, создаём корпоративных маскотов и игровых персонажей.</p>
+          <ul class="our_services__features">
+            <li class="our_services__list-item">Аватарка с вашим лицом в любом стиле</li>
+            <li class="our_services__list-item">Оживить фотографию (анимация лица)</li>
+            <li class="our_services__list-item">Корпоративный маскот под брендбук</li>
+            <li class="our_services__list-item">Персонаж для игры или приложения</li>
+          </ul>
+          <div class="our_services__price">от 250 ₽</div>
+        </div>
+        <div class="our_services__visual">
+          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-dots"></div>
+          <div class="our_services__visual-content">
+            <div class="our_services__visual-number">03</div>
+            <div class="our_services__visual-label">AI Avatars</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="our_services__item our_services__item--reversed" data-direction="right">
+        <div class="our_services__info">
+          <div class="our_services__icon">WB</div>
+          <h3 class="our_services__title">Карточки WB и Ozon</h3>
+          <p class="our_services__description">Привлекательные карточки для маркетплейсов, которые реально увеличивают CTR и продажи. Разные ракурсы, инфографика, баннеры — всё за один заказ.</p>
+          <ul class="our_services__features">
+            <li class="our_services__list-item">Главное фото товара в нескольких ракурсах</li>
+            <li class="our_services__list-item">Инфографика с характеристиками</li>
+            <li class="our_services__list-item">Пакеты карточек — выгоднее поштучного</li>
+            <li class="our_services__list-item">A/B варианты для тестирования</li>
+          </ul>
+          <div class="our_services__price">от 500 ₽</div>
+        </div>
+        <div class="our_services__visual">
+          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-dots"></div>
+          <div class="our_services__visual-content">
+            <div class="our_services__visual-number">04</div>
+            <div class="our_services__visual-label">Marketplace</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="our_services__item" data-direction="left">
+        <div class="our_services__info">
+          <div class="our_services__icon">biz</div>
+          <h3 class="our_services__title">Контент для бизнеса</h3>
+          <p class="our_services__description">Системное визуальное сопровождение: рекламные материалы, посты, баннеры, презентации и брендинг-паки под ваш фирменный стиль.</p>
+          <ul class="our_services__features">
+            <li class="our_services__list-item">Контент-план и регулярные посты</li>
+            <li class="our_services__list-item">Рекламные баннеры для кампаний</li>
+            <li class="our_services__list-item">Презентации для инвесторов и клиентов</li>
+            <li class="our_services__list-item">Брендинг-паки с AI-визуалами</li>
+          </ul>
+          <div class="our_services__price">от 3 000 ₽</div>
+        </div>
+        <div class="our_services__visual">
+          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-dots"></div>
+          <div class="our_services__visual-content">
+            <div class="our_services__visual-number">05</div>
+            <div class="our_services__visual-label">Business</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="our_services__item our_services__item--reversed" data-direction="right">
+        <div class="our_services__info">
+          <div class="our_services__icon">+</div>
+          <h3 class="our_services__title">Кастомные заказы</h3>
+          <p class="our_services__description">Нестандартная задача? Берёмся за любые проекты: сложные концепции, необычные форматы, сжатые сроки. Обсудим бриф и предложим решение.</p>
+          <ul class="our_services__features">
+            <li class="our_services__list-item">Любой формат и разрешение</li>
+            <li class="our_services__list-item">Любой художественный стиль</li>
+            <li class="our_services__list-item">Индивидуальный бриф и ТЗ</li>
+            <li class="our_services__list-item">Срочное выполнение по запросу</li>
+          </ul>
+          <div class="our_services__price">по запросу</div>
+        </div>
+        <div class="our_services__visual">
+          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-dots"></div>
+          <div class="our_services__visual-content">
+            <div class="our_services__visual-number">06</div>
+            <div class="our_services__visual-label">Custom</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- НАШИ ПРОЕКТЫ -->
+<section class="our_projects" id="our_projects">
+  <div class="our_projects__sticky">
+    <div class="our_projects__progress">
+      <div class="our_projects__progress-bar" id="progress_bar"></div>
+    </div>
+    <div class="our_projects__video_bg">
+      <div class="our_projects__placeholder"></div>
+    </div>
+    <div class="our_projects__overlay"></div>
+    <div class="our_projects__header">
+      <div class="label">Примеры работ</div>
+      <h2 class="heading">Наши <em>проекты</em></h2>
+    </div>
+    <div class="our_projects__slides container" id="project_slides">
+
+      <div class="project_slide" data-index="0">
+        <div class="project_slide__inner">
+          <div class="project_slide__text">
+            <span class="project_slide__number">01 / 04</span>
+            <div class="project_slide__category">AI Фотография</div>
+            <h3 class="project_slide__title">Реалистичный портрет для бренда</h3>
+            <p class="project_slide__description">Серия из 12 корпоративных портретов для сайта клиента без фотосессии — полностью через AI за 4 часа. Клиент сэкономил более 80 000 ₽ на съёмке.</p>
+            <div class="project_slide__tags">
+              <span class="project_slide__tag">AI Генерация</span>
+              <span class="project_slide__tag">Фотореализм</span>
+              <span class="project_slide__tag">Корпоратив</span>
+              <span class="project_slide__tag">4 часа</span>
+            </div>
+          </div>
+          <div class="project_slide__media">
+            <div class="project_slide__image_placeholder" style="background:linear-gradient(135deg,#3d3629,#6b6155)">
+              <div class="project_slide__image_label">Фото появится здесь</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project_slide" data-index="1">
+        <div class="project_slide__inner">
+          <div class="project_slide__text">
+            <span class="project_slide__number">02 / 04</span>
+            <div class="project_slide__category">AI Видео</div>
+            <h3 class="project_slide__title">Рекламный ролик 30 секунд</h3>
+            <p class="project_slide__description">Кинематографический рекламный ролик для интернет-магазина без актёров. Производство 2 дня. После запуска конверсия выросла на 23%.</p>
+            <div class="project_slide__tags">
+              <span class="project_slide__tag">AI Видео</span>
+              <span class="project_slide__tag">Кинематограф</span>
+              <span class="project_slide__tag">Реклама</span>
+              <span class="project_slide__tag">30 сек</span>
+            </div>
+          </div>
+          <div class="project_slide__media">
+            <div class="project_slide__image_placeholder" style="background:linear-gradient(135deg,#1c1812,#3d3629)">
+              <div class="project_slide__image_label">Фото появится здесь</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project_slide" data-index="2">
+        <div class="project_slide__inner">
+          <div class="project_slide__text">
+            <span class="project_slide__number">03 / 04</span>
+            <div class="project_slide__category">Маркетплейсы</div>
+            <h3 class="project_slide__title">Карточки товаров для Wildberries</h3>
+            <p class="project_slide__description">Пакет из 40 карточек: разные ракурсы, инфографика, рекламные баннеры. CTR вырос на 34% за первый месяц.</p>
+            <div class="project_slide__tags">
+              <span class="project_slide__tag">Wildberries</span>
+              <span class="project_slide__tag">40 карточек</span>
+              <span class="project_slide__tag">CTR +34%</span>
+            </div>
+          </div>
+          <div class="project_slide__media">
+            <div class="project_slide__image_placeholder" style="background:linear-gradient(135deg,#6b6155,#9b9088)">
+              <div class="project_slide__image_label">Фото появится здесь</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project_slide" data-index="3">
+        <div class="project_slide__inner">
+          <div class="project_slide__text">
+            <span class="project_slide__number">04 / 04</span>
+            <div class="project_slide__category">AI Аватарки</div>
+            <h3 class="project_slide__title">AI-аватар для YouTube канала</h3>
+            <p class="project_slide__description">Персонаж-ведущий для YouTube-канала: набор из 20 выражений лица и поз, несколько образов под разные рубрики.</p>
+            <div class="project_slide__tags">
+              <span class="project_slide__tag">YouTube</span>
+              <span class="project_slide__tag">20 образов</span>
+              <span class="project_slide__tag">AI Аватар</span>
+            </div>
+          </div>
+          <div class="project_slide__media">
+            <div class="project_slide__image_placeholder" style="background:linear-gradient(135deg,#2c2519,#6b6155)">
+              <div class="project_slide__image_label">Фото появится здесь</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="our_projects__dots" id="project_dots"></div>
+    <div class="our_projects__counter" id="project_counter">1 / 4</div>
+  </div>
+</section>
+
+<!-- ГАЛЕРЕЯ — карточки в стопке, разлетаются при скролле -->
+<div class="gallery" id="gallery">
+  <div class="gallery__sticky">
+
+    <div class="gallery__hint">
+      <div class="label">Готовые работы</div>
+      <h2 class="gallery__hint-heading">
+        Нажми на фото,<br>
+        <em>чтобы узнать подробнее</em>
+      </h2>
+      <p class="gallery__hint-sub">Реальные проекты из нашего портфолио</p>
+    </div>
+
+    <div class="gallery__field">
+
+      <div class="gallery__card" data-card-index="0">
+        <div class="gallery__card-image" style="background:linear-gradient(135deg,#3d3629,#6b6155)">
+          01
+        </div>
+        <div class="gallery__card-label">AI Портрет</div>
+      </div>
+
+      <div class="gallery__card" data-card-index="1">
+        <div class="gallery__card-image" style="background:linear-gradient(135deg,#2c2519,#a08060)">
+          02
+        </div>
+        <div class="gallery__card-label">Видеореклама</div>
+      </div>
+
+      <div class="gallery__card" data-card-index="2">
+        <div class="gallery__card-image" style="background:linear-gradient(135deg,#6b6155,#c4a882)">
+          03
+        </div>
+        <div class="gallery__card-label">Карточки WB</div>
+      </div>
+
+      <div class="gallery__card" data-card-index="3">
+        <div class="gallery__card-image" style="background:linear-gradient(135deg,#1c1812,#3d3629)">
+          04
+        </div>
+        <div class="gallery__card-label">AI Аватар</div>
+      </div>
+
+      <div class="gallery__card" data-card-index="4">
+        <div class="gallery__card-image" style="background:linear-gradient(135deg,#9b9088,#ede8df)">
+          05
+        </div>
+        <div class="gallery__card-label">Рилс</div>
+      </div>
+
+      <div class="gallery__card" data-card-index="5">
+        <div class="gallery__card-image" style="background:linear-gradient(135deg,#a08060,#c4a882)">
+          06
+        </div>
+        <div class="gallery__card-label">Брендинг</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ЛАЙТБОКС -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox__box" id="lightbox_box">
+    <button class="lightbox__close" id="lightbox_close">&#215;</button>
+  </div>
+</div>
+
+<!-- ПРАЙС-ЛИСТ -->
+<section class="section section--warm" id="pricing">
+  <div class="container">
+    <div class="section__header">
+      <div class="label">Прайс-лист</div>
+      <h2 class="heading"><em>Цены</em></h2>
+      <p class="subtext">Прозрачное ценообразование без скрытых доплат</p>
+    </div>
+    <div class="pricing">
+
+      <div class="pricing__block" id="pricing_photos">
+        <div class="pricing__block-header">
+          <span class="pricing__block-title">Фотографии</span>
+        </div>
+        <div class="pricing__rows">
+          <div class="pricing__row">
+            <span class="pricing__row-name">Фотка<small>1 изображение</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">100 ₽</span>
+          </div>
+          <div class="pricing__row">
+            <span class="pricing__row-name">Фото альбом<small>20 фото</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">2 000 ₽</span>
+          </div>
+          <div class="pricing__row">
+            <span class="pricing__row-name">Оживить фото<small>анимация лица или объекта</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">250 ₽</span>
+          </div>
+          <div class="pricing__row">
+            <span class="pricing__row-name">Аватарка<small>с участием лица</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">1 000–1 500 ₽</span>
+          </div>
+          <div class="pricing__row">
+            <span class="pricing__row-name">Карточки ВБ<small>1 карточка с ракурсами</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">500 ₽</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pricing__block" id="pricing_video">
+        <div class="pricing__block-header">
+          <span class="pricing__block-title">Видео</span>
+        </div>
+        <div class="pricing__rows">
+          <div class="pricing__row">
+            <span class="pricing__row-name">Видео реклама<small>от 10 сек, с монтажом</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">2 000 ₽</span>
+          </div>
+          <div class="pricing__row">
+            <span class="pricing__row-name">Рилсы / Тик Токи<small>30 сек, вертикальный формат</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">3 000 ₽</span>
+          </div>
+          <div class="pricing__row">
+            <span class="pricing__row-name">AI-аватар видео<small>ведущий говорит ваш текст</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">от 3 000 ₽</span>
+          </div>
+          <div class="pricing__row">
+            <span class="pricing__row-name">Анимация логотипа<small>моушн-графика</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">от 1 500 ₽</span>
+          </div>
+          <div class="pricing__row">
+            <span class="pricing__row-name">Кастомный проект<small>обсудим бриф</small></span>
+            <span class="pricing__row-dots"></span>
+            <span class="pricing__row-price">по запросу</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- КАК МЫ РАБОТАЕМ -->
+<section class="section" id="how_we_work">
+  <div class="container">
+    <div class="section__header">
+      <div class="label">Процесс</div>
+      <h2 class="heading">Как мы <em>работаем</em></h2>
+    </div>
+    <div class="how_we_work__steps">
+      <div class="how_we_work__step">
+        <span class="how_we_work__step-number">01</span>
+        <h3 class="how_we_work__step-title">Бриф</h3>
+        <p class="how_we_work__step-text">Вы описываете задачу — стиль, тематику, формат, цель. Чем детальнее бриф, тем точнее результат с первой попытки.</p>
+      </div>
+      <div class="how_we_work__connector"></div>
+      <div class="how_we_work__step">
+        <span class="how_we_work__step-number">02</span>
+        <h3 class="how_we_work__step-title">Согласование</h3>
+        <p class="how_we_work__step-text">Уточняем детали, согласуем концепцию и стоимость. Подписываем договор или NDA по запросу.</p>
+      </div>
+      <div class="how_we_work__connector"></div>
+      <div class="how_we_work__step">
+        <span class="how_we_work__step-number">03</span>
+        <h3 class="how_we_work__step-title">Генерация</h3>
+        <p class="how_we_work__step-text">Наши специалисты работают с AI-инструментами, подбирая лучшие решения. Показываем промежуточные результаты.</p>
+      </div>
+      <div class="how_we_work__connector"></div>
+      <div class="how_we_work__step">
+        <span class="how_we_work__step-number">04</span>
+        <h3 class="how_we_work__step-title">Сдача</h3>
+        <p class="how_we_work__step-text">Вносим до 3 правок бесплатно и передаём финальный файл в нужном формате и разрешении.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- КОНТАКТЫ -->
+<section class="section section--warm" id="contact_us">
+  <div class="container">
+    <div class="contact_us__grid">
+
+      <div id="contact_left">
+        <div class="label">Свяжитесь с нами</div>
+        <h2 class="heading">Готовы<br><em>начать?</em></h2>
+        <p class="contact_us__description">
+          Опишите свой проект в Telegram — ответим в течение нескольких часов
+          с оценкой и предложением.
+        </p>
+        <div class="contact_us__links">
+          <a href="https://t.me/ithubai" class="contact_us__link" target="_blank" rel="noopener">
+            <div class="contact_us__link-icon">tg</div>
+            <div>
+              <strong>Telegram</strong>
+              <span>@ithubai — ответим быстро</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div id="contact_right">
+        <div class="contact_us__card">
+          <div class="label" style="margin-bottom:.6rem">Как оформить заказ</div>
+          <p>
+            Напишите нам в <strong>Telegram @ithubai</strong> и опишите задачу:
+            что нужно создать, в каком стиле, для каких целей.
+            Мы ответим быстро и предложим лучшее решение.
+          </p>
+          <p>
+            Принимаем заказы <strong>любой сложности</strong> —
+            от одной аватарки до большого рекламного проекта.
+            Работаем с юрлицами, ИП и физлицами.
+          </p>
+          <a href="https://t.me/ithubai" class="button button--dark" target="_blank" rel="noopener" style="margin-top:1rem">
+            Написать в Telegram
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ПОДВАЛ -->
+<footer class="site_footer">
+  <div class="container">
+    <div class="site_footer__inner">
+      <div class="site_footer__logo">
+        <div class="site_footer__logo-icon"></div>
+        ithub ai
+      </div>
+      <div class="site_footer__copy">© 2025 ithub ai · Все права защищены</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// Отключаем сложные анимации на мобильных устройствах для производительности
+const isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+/* ---- Навбар: фон при скролле ---- */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('navbar--scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ---- Бургер-меню ---- */
+const burgerBtn   = document.getElementById('burger_btn');
+const mobileMenuEl= document.getElementById('mobile_menu');
+
+burgerBtn.addEventListener('click', () => {
+  burgerBtn.classList.toggle('navbar__burger--open');
+  mobileMenuEl.classList.toggle('mobile_menu--open');
+});
+
+function closeMobileMenu() {
+  burgerBtn.classList.remove('navbar__burger--open');
+  mobileMenuEl.classList.remove('mobile_menu--open');
+}
+
+/* ---- Анимация героя при загрузке страницы ---- */
+gsap.timeline({ defaults: { ease: 'power3.out' } })
+  .from('.hero__badge',    { y:25, opacity:0, duration:.7 })
+  .from('.hero__title',    { y:55, opacity:0, duration:.9 }, '-=.4')
+  .from('.hero__text',     { y:30, opacity:0, duration:.7 }, '-=.5')
+  .from('.hero__buttons',  { y:20, opacity:0, duration:.6 }, '-=.4')
+  .from('.stat',           { y:20, opacity:0, stagger:.1, duration:.5 }, '-=.3');
+
+/* ---- О нас: вылет блоков слева и справа ---- */
+gsap.from('#about_left', {
+  scrollTrigger: { trigger:'#about_us', start:'top 80%', toggleActions:'play reverse play reverse' },
+  x: isMobile ? -40 : -80, opacity:0, duration:.9, ease:'power3.out'
+});
+gsap.from('#about_right', {
+  scrollTrigger: { trigger:'#about_us', start:'top 80%', toggleActions:'play reverse play reverse' },
+  x: isMobile ? 40 : 80, opacity:0, duration:.9, delay:.15, ease:'power3.out'
+});
+gsap.from('.about_us__feature', {
+  scrollTrigger: { trigger:'.about_us__features', start:'top 88%', toggleActions:'play reverse play reverse' },
+  y:30, opacity:0, stagger:.1, duration:.6, ease:'power2.out'
+});
+gsap.from('.about_us__tool', {
+  scrollTrigger: { trigger:'.about_us__tools', start:'top 92%', toggleActions:'play reverse play reverse' },
+  scale:.8, opacity:0, stagger:.04, duration:.4, ease:'back.out(1.7)'
+});
+
+/* ---- Услуги: поочерёдно слева / справа с реверсом ---- */
+gsap.from('#services_header', {
+  scrollTrigger: { trigger:'#our_services', start:'top 80%', toggleActions:'play reverse play reverse' },
+  y:40, opacity:0, duration:.8, ease:'power3.out'
+});
+
+document.querySelectorAll('.our_services__item').forEach(item => {
+  const fromX = item.dataset.direction === 'right' ? (isMobile ? 60 : 120) : (isMobile ? -60 : -120);
+  gsap.fromTo(item,
+    { x: fromX, opacity: 0 },
+    {
+      x: 0, opacity: 1, duration: .9, ease: 'power3.out',
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 92%',
+        end:   'bottom 5%',
+        toggleActions: 'play reverse play reverse',
+      }
+    }
+  );
+});
+
+/* ---- Прайс: слева и справа ---- */
+gsap.from('#pricing_photos', {
+  scrollTrigger: { trigger:'#pricing_photos', start:'top 85%', toggleActions:'play reverse play reverse' },
+  x: isMobile ? -30 : -70, opacity:0, duration:.85, ease:'power3.out'
+});
+gsap.from('#pricing_video', {
+  scrollTrigger: { trigger:'#pricing_video', start:'top 85%', toggleActions:'play reverse play reverse' },
+  x: isMobile ? 30 : 70, opacity:0, duration:.85, ease:'power3.out'
+});
+
+/* ---- Как мы работаем ---- */
+gsap.from('#how_we_work .section__header', {
+  scrollTrigger: { trigger:'#how_we_work', start:'top 80%', toggleActions:'play reverse play reverse' },
+  y:40, opacity:0, duration:.8, ease:'power3.out'
+});
+gsap.from('.how_we_work__step', {
+  scrollTrigger: { trigger:'.how_we_work__steps', start:'top 80%', toggleActions:'play reverse play reverse' },
+  y:50, opacity:0, stagger:.12, duration:.75, ease:'power3.out'
+});
+
+/* ---- Контакты ---- */
+gsap.from('#contact_left', {
+  scrollTrigger: { trigger:'#contact_us', start:'top 80%', toggleActions:'play reverse play reverse' },
+  x: isMobile ? -30 : -60, opacity:0, duration:.9, ease:'power3.out'
+});
+gsap.from('#contact_right', {
+  scrollTrigger: { trigger:'#contact_us', start:'top 80%', toggleActions:'play reverse play reverse' },
+  x: isMobile ? 30 : 60, opacity:0, duration:.9, delay:.15, ease:'power3.out'
+});
+
+/* ---- Наши проекты: скролл переключает слайды ---- */
+(function() {
+  const section    = document.getElementById('our_projects');
+  const slidesWrap = document.getElementById('project_slides');
+  const dotsWrap   = document.getElementById('project_dots');
+  const counterEl  = document.getElementById('project_counter');
+  const progressBar= document.getElementById('progress_bar');
+  const videoBg    = section.querySelector('.our_projects__video_bg');
+  const slides     = slidesWrap.querySelectorAll('.project_slide');
+  const total      = slides.length;
+  if (!total) return;
+
+  let current = -1;
+
+  /* Создаём точки-переключатели */
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'our_projects__dot';
+    dot.addEventListener('click', () => {
+      window.scrollTo({
+        top: section.offsetTop + (section.offsetHeight / total) * i + 50,
+        behavior: 'smooth'
+      });
+    });
+    dotsWrap.appendChild(dot);
+  });
+
+  /* Показываем слайд с анимацией */
+  function showSlide(idx) {
+    if (idx === current) return;
+    const prev = current;
+    current = idx;
+
+    slides.forEach((slide, i) => {
+      if (i === idx) {
+        slide.classList.add('project_slide--active');
+        const textEl  = slide.querySelector('.project_slide__text');
+        const mediaEl = slide.querySelector('.project_slide__media');
+        gsap.killTweensOf([textEl, mediaEl]);
+        gsap.fromTo(textEl,  { x: isMobile ? -30 : -70, opacity:0 }, { x:0, opacity:1, duration:.85, ease:'power3.out', delay:.1 });
+        if (mediaEl) gsap.fromTo(mediaEl, { x: isMobile ? 30 : 70, opacity:0 }, { x:0, opacity:1, duration:.85, ease:'power3.out', delay:.2 });
+
+      } else if (i === prev) {
+        const els = [
+          slide.querySelector('.project_slide__text'),
+          slide.querySelector('.project_slide__media')
+        ].filter(Boolean);
+        gsap.to(els, {
+          opacity:0, y:-30, duration:.5, ease:'power2.in',
+          onComplete: () => {
+            slide.classList.remove('project_slide--active');
+            gsap.set(els, { y: 0 });
+          }
+        });
+      } else {
+        slide.classList.remove('project_slide--active');
+      }
+    });
+
+    dotsWrap.querySelectorAll('.our_projects__dot').forEach((dot, i) => {
+      dot.classList.toggle('our_projects__dot--active', i === idx);
+    });
+    counterEl.textContent = (idx + 1) + ' / ' + total;
+  }
+
+  ScrollTrigger.create({
+    trigger: section,
+    start: 'top top',
+    end:   'bottom bottom',
+    scrub: 0.3,
+    onUpdate(self) {
+      const p = self.progress;
+      progressBar.style.width = (p * 100) + '%';
+      videoBg.style.transform = 'translateY(' + ((p - .5) * 90) + 'px)';
+      showSlide(Math.min(Math.floor(p * total), total - 1));
+    }
+  });
+
+  showSlide(0);
+})();
+
+/* ---- Галерея: стопка разлетается при скролле ---- */
+(function() {
+  const galleryWrap = document.getElementById('gallery');
+  const cards = document.querySelectorAll('.gallery__card');
+
+  // Адаптивные финальные позиции
+  const isMobileGallery = window.matchMedia('(max-width: 640px)').matches;
+  const finalPositions = isMobileGallery ? [
+    { x: '-35vw', y: '-18vh', rotate: '-6deg'   },
+    { x: '-10vw', y: '-22vh', rotate:  '3deg'   },
+    { x:  '15vw', y: '-15vh', rotate: '-2deg'   },
+    { x: '-30vw', y:  '15vh', rotate:  '5deg'   },
+    { x:   '0vw', y:  '20vh', rotate: '-4deg'   },
+    { x:  '28vw', y:  '12vh', rotate:  '3.5deg' },
+  ] : [
+    { x: '-42vw', y: '-22vh', rotate: '-6deg'   },
+    { x: '-15vw', y: '-25vh', rotate:  '3deg'   },
+    { x:  '20vw', y: '-18vh', rotate: '-2deg'   },
+    { x: '-38vw', y:  '18vh', rotate:  '5deg'   },
+    { x:   '5vw', y:  '22vh', rotate: '-4deg'   },
+    { x:  '36vw', y:  '10vh', rotate:  '3.5deg' },
+  ];
+
+  ScrollTrigger.create({
+    trigger: galleryWrap,
+    start:   'top top',
+    end:     'bottom bottom',
+    scrub:   0.4,
+    onUpdate(self) {
+      const progress = Math.min(self.progress / 0.05, 1);
+
+      cards.forEach((card, i) => {
+        const pos    = finalPositions[i];
+        const startRot = (i % 2 === 0 ? -1 : 1) * (i * 2);
+        const endRot   = parseFloat(pos.rotate);
+        const rotation = startRot + (endRot - startRot) * progress;
+
+        card.style.transform =
+          'translate(-50%, -50%) ' +
+          'translateX(calc(' + pos.x + ' * ' + progress + ')) ' +
+          'translateY(calc(' + pos.y + ' * ' + progress + ')) ' +
+          'rotate(' + rotation + 'deg) ' +
+          'scale(' + (0.88 + 0.12 * progress) + ')';
+
+        card.style.zIndex       = Math.round(5 + progress * (i + 1));
+        card.style.pointerEvents= progress > 0.5 ? 'all' : 'none';
+      });
+    }
+  });
+})();
+
+/* ---- Лайтбокс для галереи ---- */
+(function() {
+  const CARDS_DATA = [
+    { category:'AI Фотография', title:'Корпоративный портрет',      text:'Серия из 12 портретов для корпоративного сайта без фотосессии. AI-генерация за 4 часа — клиент сэкономил 80 000 ₽.', tags:['Портрет','Корпоратив','4 часа'],   layout:'left',   gradient:'linear-gradient(135deg,#3d3629,#6b6155)' },
+    { category:'AI Видео',      title:'Рекламный ролик 30 сек',     text:'Кинематографический ролик для интернет-магазина. 2 дня производства, рост конверсии +23%.',                          tags:['Реклама','Видео','30 сек'],        layout:'right',  gradient:'linear-gradient(135deg,#2c2519,#a08060)' },
+    { category:'Маркетплейсы',  title:'Карточки для Wildberries',   text:'40 карточек товара: разные ракурсы, инфографика, баннеры. CTR вырос на 34% за первый месяц.',                        tags:['Wildberries','40 карточек'],       layout:'bottom', gradient:'linear-gradient(135deg,#6b6155,#c4a882)' },
+    { category:'AI Аватар',     title:'Персонаж для YouTube',       text:'Ведущий-аватар для YouTube-канала: 20 выражений лица и поз, несколько образов под разные рубрики.',                   tags:['YouTube','20 образов'],            layout:'top',    gradient:'linear-gradient(135deg,#1c1812,#3d3629)' },
+    { category:'AI Видео',      title:'Рилс для бренда одежды',     text:'30-секундный рилс для Instagram. AI-генерация образов модели и одежды в разных локациях.',                           tags:['Instagram','Fashion','30 сек'],    layout:'left',   gradient:'linear-gradient(135deg,#9b9088,#ede8df)' },
+    { category:'Брендинг',      title:'Фирменный стиль AI-студии',  text:'Пакет из 40 AI-визуалов для брендинга: паттерны, иллюстрации, шаблоны соцсетей под единый стиль.',                   tags:['Брендинг','40 визуалов','Стиль'],  layout:'right',  gradient:'linear-gradient(135deg,#a08060,#c4a882)' },
+  ];
+
+  const lightbox      = document.getElementById('lightbox');
+  const lightboxBox   = document.getElementById('lightbox_box');
+  const lightboxClose = document.getElementById('lightbox_close');
+
+  document.querySelectorAll('.gallery__card').forEach(card => {
+    card.addEventListener('click', () => {
+      const data = CARDS_DATA[parseInt(card.dataset.cardIndex)];
+      if (!data) return;
+
+      while (lightboxBox.children.length > 1) lightboxBox.removeChild(lightboxBox.lastChild);
+
+      lightboxBox.className = 'lightbox__box lightbox__box--' + data.layout;
+
+      const imageEl = document.createElement('div');
+      imageEl.className = 'lightbox__image';
+      imageEl.style.background = data.gradient;
+      imageEl.textContent = String(parseInt(card.dataset.cardIndex) + 1).padStart(2, '0');
+
+      const contentEl = document.createElement('div');
+      contentEl.className = 'lightbox__content';
+      contentEl.innerHTML =
+        '<div class="lightbox__category">' + data.category + '</div>' +
+        '<h3 class="lightbox__title">' + data.title + '</h3>' +
+        '<p class="lightbox__text">' + data.text + '</p>' +
+        '<div class="lightbox__tags">' +
+          data.tags.map(t => '<span class="lightbox__tag">' + t + '</span>').join('') +
+        '</div>';
+
+      lightboxBox.appendChild(imageEl);
+      lightboxBox.appendChild(contentEl);
+
+      lightbox.classList.add('lightbox--open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  
+  function closeLightbox() {
+    lightbox.classList.remove('lightbox--open');
+    document.body.style.overflow = '';
+  }
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+})();
+</script>
+</body>
+</html>
