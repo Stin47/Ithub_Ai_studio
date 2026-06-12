@@ -48,13 +48,47 @@
 /* ============================================================
    СБРОС
    ============================================================ */
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html  { scroll-behavior: auto; }
-body  { font-family:var(--font-sans); background:var(--color-bg); color:var(--color-ink-mid); line-height:1.6; overflow-x:hidden; cursor:default; }
-a     { text-decoration:none; color:inherit; }
-ul    { list-style:none; }
-button{ border:none; background:none; font-family:inherit; cursor:pointer; }
-img   { display:block; max-width:100%; }
+*,
+*::before,
+*::after {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  font-family:var(--font-sans);
+  background:var(--color-bg);
+  color:var(--color-ink-mid);
+  line-height:1.6;
+  overflow-x:hidden;
+  cursor:default;
+}
+
+a {
+  text-decoration:none;
+  color:inherit;
+}
+
+ul {
+  list-style:none;
+}
+
+button {
+  border:none;
+  background:none;
+  font-family:inherit;
+  cursor:pointer;
+}
+
+img {
+  display:block;
+  max-width:100%;
+}
 
 /* ============================================================
    ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ
@@ -122,12 +156,15 @@ img   { display:block; max-width:100%; }
 }
 
 .button svg {
-  width:15px; height:15px;
+  width:15px;
+  height:15px;
   flex-shrink:0;
   transition: transform var(--duration);
 }
 
-.button:hover svg { transform: translateX(4px); }
+.button:hover svg {
+  transform: translateX(4px);
+}
 
 .button--dark {
   background: var(--color-ink);
@@ -156,13 +193,16 @@ img   { display:block; max-width:100%; }
    ============================================================ */
 .navbar {
   position: fixed;
-  top:0; left:0; right:0;
+  top:0;
+  left:0;
+  right:0;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1.2rem 3rem;
-  transition: background .3s, box-shadow .3s;
+  transition: background .3s,
+              box-shadow .3s;
 }
 
 .navbar--scrolled {
@@ -181,7 +221,8 @@ img   { display:block; max-width:100%; }
 }
 
 .navbar__logo-icon {
-  width: 28px; height: 28px;
+  width: 28px;
+  height: 28px;
   border: 2px solid var(--color-ink);
   border-radius: 6px;
   display: flex;
@@ -191,7 +232,8 @@ img   { display:block; max-width:100%; }
 
 .navbar__logo-icon::after {
   content: '';
-  width: 7px; height: 7px;
+  width: 7px;
+  height: 7px;
   background: var(--color-ink);
   border-radius: 50%;
 }
@@ -212,14 +254,21 @@ img   { display:block; max-width:100%; }
 .navbar__link::after {
   content: '';
   position: absolute;
-  bottom: -3px; left: 0;
-  width: 0; height: 1px;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
   background: var(--color-gold-mid);
   transition: width .3s var(--ease-default);
 }
 
-.navbar__link:hover { color: var(--color-ink); }
-.navbar__link:hover::after { width: 100%; }
+.navbar__link:hover {
+  color: var(--color-ink);
+}
+
+.navbar__link:hover::after {
+  width: 100%;
+}
 
 .navbar__cta {
   font-size: .82rem;
@@ -228,10 +277,14 @@ img   { display:block; max-width:100%; }
   color: var(--color-cream);
   padding: .5rem 1.2rem;
   border-radius: var(--radius-pill);
-  transition: opacity var(--duration), transform var(--duration);
+  transition: opacity var(--duration),
+              transform var(--duration);
 }
 
-.navbar__cta:hover { opacity: .8; transform: scale(1.04); }
+.navbar__cta:hover {
+  opacity: .8;
+  transform: scale(1.04);
+}
 
 .navbar__burger {
   display: none;
@@ -242,15 +295,24 @@ img   { display:block; max-width:100%; }
 
 .navbar__burger span {
   display: block;
-  width: 22px; height: 1.5px;
+  width: 22px;
+  height: 1.5px;
   background: var(--color-ink);
   border-radius: 2px;
   transition: .3s;
 }
 
-.navbar__burger--open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-.navbar__burger--open span:nth-child(2) { opacity: 0; }
-.navbar__burger--open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.navbar__burger--open span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.navbar__burger--open span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar__burger--open span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
 
 /* ============================================================
    МОБИЛЬНОЕ МЕНЮ
@@ -267,7 +329,9 @@ img   { display:block; max-width:100%; }
   transition: transform .4s var(--ease-default);
 }
 
-.mobile_menu--open { transform: translateX(0); }
+.mobile_menu--open {
+  transform: translateX(0);
+}
 
 .mobile_menu ul {
   display: flex;
@@ -283,7 +347,9 @@ img   { display:block; max-width:100%; }
   transition: color var(--duration);
 }
 
-.mobile_menu a:hover { color: var(--color-gold-mid); }
+.mobile_menu a:hover {
+  color: var(--color-gold-mid);
+}
 
 /* ============================================================
    HERO (ГЛАВНЫЙ ЭКРАН)
@@ -305,29 +371,47 @@ img   { display:block; max-width:100%; }
 }
 
 .hero__blob--1 {
-  width:700px; height:700px;
+  width:700px;
+  height:700px;
   background: radial-gradient(circle,#d4c4a8,transparent 70%);
-  top:-150px; right:-150px;
+  top:-150px;
+  right:-150px;
   animation: blob1 18s ease-in-out infinite alternate;
 }
 
 .hero__blob--2 {
-  width:500px; height:500px;
+  width:500px;
+  height:500px;
   background: radial-gradient(circle,#c8b898,transparent 70%);
-  bottom:-80px; left:-80px;
+  bottom:-80px;
+  left:-80px;
   animation: blob2 22s ease-in-out infinite alternate;
 }
 
 .hero__blob--3 {
-  width:400px; height:400px;
+  width:400px;
+  height:400px;
   background: radial-gradient(circle,#a08060,transparent 70%);
-  top:40%; left:40%; opacity:.2;
+  top:40%;
+  left:40%;
+  opacity:.2;
   animation: blob3 25s ease-in-out infinite alternate;
 }
 
-@keyframes blob1 { from{transform:translate(0,0) scale(1)} to{transform:translate(-40px,40px) scale(1.1)} }
-@keyframes blob2 { from{transform:translate(0,0) scale(1)} to{transform:translate(50px,-30px) scale(1.15)} }
-@keyframes blob3 { from{transform:translate(0,0) scale(1)} to{transform:translate(-30px,50px) scale(.9)} }
+@keyframes blob1 {
+  from { transform:translate(0,0) scale(1); }
+  to   { transform:translate(-40px,40px) scale(1.1); }
+}
+
+@keyframes blob2 {
+  from { transform:translate(0,0) scale(1); }
+  to   { transform:translate(50px,-30px) scale(1.15); }
+}
+
+@keyframes blob3 {
+  from { transform:translate(0,0) scale(1); }
+  to   { transform:translate(-30px,50px) scale(.9); }
+}
 
 .hero__body {
   position: relative;
@@ -352,15 +436,23 @@ img   { display:block; max-width:100%; }
 }
 
 .hero__badge-dot {
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   background: var(--color-gold-mid);
   border-radius: 50%;
   animation: dot-pulse 2s ease-in-out infinite;
 }
 
 @keyframes dot-pulse {
-  0%,100% { opacity:1; transform:scale(1); }
-  50%      { opacity:.5; transform:scale(.8); }
+  0%,
+  100% {
+    opacity:1;
+    transform:scale(1);
+  }
+  50% {
+    opacity:.5;
+    transform:scale(.8);
+  }
 }
 
 .hero__title {
@@ -373,7 +465,10 @@ img   { display:block; max-width:100%; }
   margin-bottom: 1.5rem;
 }
 
-.hero__title em { font-style:italic; color:var(--color-gold-mid); }
+.hero__title em {
+  font-style:italic;
+  color:var(--color-gold-mid);
+}
 
 .hero__text {
   font-size: 1.05rem;
@@ -417,7 +512,8 @@ img   { display:block; max-width:100%; }
 
 .hero__scroll {
   position: absolute;
-  bottom: 2.5rem; left: 3rem;
+  bottom: 2.5rem;
+  left: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -426,14 +522,23 @@ img   { display:block; max-width:100%; }
 }
 
 .hero__scroll-line {
-  width: 1px; height: 55px;
+  width: 1px;
+  height: 55px;
   background: linear-gradient(to bottom,var(--color-ink),transparent);
   animation: scroll-anim 2.2s ease-in-out infinite;
 }
 
 @keyframes scroll-anim {
-  0%,100% { opacity:.2; transform:scaleY(.5); transform-origin:top; }
-  50%      { opacity:.8; transform:scaleY(1); }
+  0%,
+  100% {
+    opacity:.2;
+    transform:scaleY(.5);
+    transform-origin:top;
+  }
+  50% {
+    opacity:.8;
+    transform:scaleY(1);
+  }
 }
 
 /* ============================================================
@@ -459,7 +564,10 @@ img   { display:block; max-width:100%; }
 .about_us__card::before {
   content: '';
   position: absolute;
-  top:0; left:0; right:0; height:3px;
+  top:0;
+  left:0;
+  right:0;
+  height:3px;
   background: linear-gradient(90deg,var(--color-gold),var(--color-gold-mid));
 }
 
@@ -476,10 +584,14 @@ img   { display:block; max-width:100%; }
   background: var(--color-bg-warm);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  transition: transform var(--duration), box-shadow var(--duration);
+  transition: transform var(--duration),
+              box-shadow var(--duration);
 }
 
-.about_us__stat:hover { transform:translateY(-3px); box-shadow:var(--shadow-sm); }
+.about_us__stat:hover {
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-sm);
+}
 
 .about_us__stat-number {
   font-family: var(--font-serif);
@@ -523,7 +635,9 @@ img   { display:block; max-width:100%; }
   border: 1px solid var(--color-border);
   padding: .3rem .75rem;
   border-radius: var(--radius-pill);
-  transition: color var(--duration), border-color var(--duration), transform .2s;
+  transition: color var(--duration),
+              border-color var(--duration),
+              transform .2s;
 }
 
 .about_us__tool:hover {
@@ -539,7 +653,10 @@ img   { display:block; max-width:100%; }
   margin-bottom: .9rem;
 }
 
-.about_us__text p strong { color:var(--color-ink); font-weight:600; }
+.about_us__text p strong {
+  color:var(--color-ink);
+  font-weight:600;
+}
 
 .about_us__features {
   display: flex;
@@ -557,13 +674,18 @@ img   { display:block; max-width:100%; }
   border-radius: var(--radius-sm);
   padding: 1.1rem 1.3rem;
   box-shadow: var(--shadow-sm);
-  transition: transform var(--duration), box-shadow var(--duration);
+  transition: transform var(--duration),
+              box-shadow var(--duration);
 }
 
-.about_us__feature:hover { transform:translateX(6px); box-shadow:var(--shadow-md); }
+.about_us__feature:hover {
+  transform:translateX(6px);
+  box-shadow:var(--shadow-md);
+}
 
 .about_us__feature-icon {
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
   background: var(--color-bg-warm);
   border: 1px solid var(--color-border);
   border-radius: 10px;
@@ -586,7 +708,10 @@ img   { display:block; max-width:100%; }
   margin-bottom: .15rem;
 }
 
-.about_us__feature-body p { font-size:.82rem; color:var(--color-ink-muted); }
+.about_us__feature-body p {
+  font-size:.82rem;
+  color:var(--color-ink-muted);
+}
 
 /* ============================================================
    НАШИ УСЛУГИ
@@ -608,20 +733,58 @@ img   { display:block; max-width:100%; }
   opacity: 0;
 }
 
-.our_services__item:hover { box-shadow: var(--shadow-md); }
+.our_services__item:hover {
+  box-shadow: var(--shadow-md);
+}
 
-.our_services__item--reversed { direction: rtl; }
-.our_services__item--reversed > * { direction: ltr; }
+.our_services__item--reversed {
+  direction: rtl;
+}
 
-.our_services__item--dark .our_services__info { background: var(--color-ink); }
-.our_services__item--dark .our_services__visual { background:#2c2519; border-color:rgba(255,255,255,.08); }
-.our_services__item--dark .our_services__title { color:var(--color-cream); }
-.our_services__item--dark .our_services__description { color:rgba(255,255,255,.65); }
-.our_services__item--dark .our_services__list-item { color:rgba(255,255,255,.7); }
-.our_services__item--dark .our_services__list-item::before { color:var(--color-gold); }
-.our_services__item--dark .our_services__price { background:rgba(255,255,255,.1); color:var(--color-gold); border-color:rgba(255,255,255,.15); }
-.our_services__item--dark .our_services__visual-number { color:var(--color-gold); }
-.our_services__item--dark .our_services__icon { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.12); color:var(--color-gold); }
+.our_services__item--reversed > * {
+  direction: ltr;
+}
+
+.our_services__item--dark .our_services__info {
+  background: var(--color-ink);
+}
+
+.our_services__item--dark .our_services__visual {
+  background:#2c2519;
+  border-color:rgba(255,255,255,.08);
+}
+
+.our_services__item--dark .our_services__title {
+  color:var(--color-cream);
+}
+
+.our_services__item--dark .our_services__description {
+  color:rgba(255,255,255,.65);
+}
+
+.our_services__item--dark .our_services__list-item {
+  color:rgba(255,255,255,.7);
+}
+
+.our_services__item--dark .our_services__list-item::before {
+  color:var(--color-gold);
+}
+
+.our_services__item--dark .our_services__price {
+  background:rgba(255,255,255,.1);
+  color:var(--color-gold);
+  border-color:rgba(255,255,255,.15);
+}
+
+.our_services__item--dark .our_services__visual-number {
+  color:var(--color-gold);
+}
+
+.our_services__item--dark .our_services__icon {
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.12);
+  color:var(--color-gold);
+}
 
 .our_services__info {
   padding: 2.2rem 2.5rem;
@@ -663,13 +826,18 @@ img   { display:block; max-width:100%; }
 
 .our_services__visual-lines span {
   position: absolute;
-  left:0; right:0; height:1px;
+  left:0;
+  right:0;
+  height:1px;
   background: linear-gradient(90deg,transparent,var(--color-gold),transparent);
   opacity: .25;
 }
 
 .our_services__visual-lines span:nth-child(1) { top:25%; }
-.our_services__visual-lines span:nth-child(2) { top:50%; opacity:.4; }
+.our_services__visual-lines span:nth-child(2) {
+  top:50%;
+  opacity:.4;
+}
 .our_services__visual-lines span:nth-child(3) { top:75%; }
 
 .our_services__visual-content {
@@ -697,7 +865,8 @@ img   { display:block; max-width:100%; }
 
 .our_services__badge {
   position: absolute;
-  top: 1rem; right: 1rem;
+  top: 1rem;
+  right: 1rem;
   font-size: .6rem;
   font-weight: 600;
   letter-spacing: .1em;
@@ -709,7 +878,8 @@ img   { display:block; max-width:100%; }
 }
 
 .our_services__icon {
-  width: 44px; height: 44px;
+  width: 44px;
+  height: 44px;
   background: var(--color-bg-warm);
   border: 1px solid var(--color-border);
   border-radius: 10px;
@@ -797,7 +967,8 @@ img   { display:block; max-width:100%; }
 }
 
 .our_projects__video_bg video {
-  width:100%; height:100%;
+  width:100%;
+  height:100%;
   object-fit: cover;
 }
 
@@ -821,13 +992,24 @@ img   { display:block; max-width:100%; }
 .our_projects__placeholder::after {
   content: '';
   position: absolute;
-  top:-100%; left:0; right:0; height:100%;
+  top:-100%;
+  left:0;
+  right:0;
+  height:100%;
   background: linear-gradient(180deg,transparent,rgba(196,168,130,.04) 50%,transparent);
   animation: sweep 5s ease-in-out infinite;
 }
 
-@keyframes grid-move { from{transform:translate(0,0)} to{transform:translate(44px,44px)} }
-@keyframes sweep     { 0%,100%{top:-100%} 50%{top:100%} }
+@keyframes grid-move {
+  from { transform:translate(0,0); }
+  to   { transform:translate(44px,44px); }
+}
+
+@keyframes sweep {
+  0%,
+  100% { top:-100%; }
+  50%  { top:100%; }
+}
 
 .our_projects__overlay {
   position: absolute;
@@ -838,7 +1020,9 @@ img   { display:block; max-width:100%; }
 
 .our_projects__progress {
   position: absolute;
-  top:0; left:0; right:0;
+  top:0;
+  left:0;
+  right:0;
   height: 3px;
   background: rgba(255,255,255,.1);
   z-index: 4;
@@ -853,20 +1037,30 @@ img   { display:block; max-width:100%; }
 
 .our_projects__header {
   position: absolute;
-  top:2.5rem; left:50%;
+  top:2.5rem;
+  left:50%;
   transform: translateX(-50%);
   text-align: center;
   z-index: 3;
   width: 100%;
 }
 
-.our_projects__header .label { color:var(--color-gold); }
-.our_projects__header .heading { color:#faf7f2; }
-.our_projects__header .heading em { color:var(--color-gold); }
+.our_projects__header .label {
+  color:var(--color-gold);
+}
+
+.our_projects__header .heading {
+  color:#faf7f2;
+}
+
+.our_projects__header .heading em {
+  color:var(--color-gold);
+}
 
 .our_projects__slides {
   position: relative;
-  width:100%; height:100%;
+  width:100%;
+  height:100%;
   z-index: 2;
 }
 
@@ -881,7 +1075,10 @@ img   { display:block; max-width:100%; }
   pointer-events: none;
 }
 
-.project_slide--active { opacity:1; pointer-events:all; }
+.project_slide--active {
+  opacity:1;
+  pointer-events:all;
+}
 
 .project_slide__inner {
   display: grid;
@@ -891,7 +1088,9 @@ img   { display:block; max-width:100%; }
   width: 100%;
 }
 
-.project_slide__text { color:#faf7f2; }
+.project_slide__text {
+  color:#faf7f2;
+}
 
 .project_slide__number {
   display: block;
@@ -927,7 +1126,11 @@ img   { display:block; max-width:100%; }
   margin-bottom: 1.5rem;
 }
 
-.project_slide__tags { display:flex; flex-wrap:wrap; gap:.5rem; }
+.project_slide__tags {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+}
 
 .project_slide__tag {
   font-size: .72rem;
@@ -939,7 +1142,9 @@ img   { display:block; max-width:100%; }
   border-radius: var(--radius-pill);
 }
 
-.project_slide__media { position:relative; }
+.project_slide__media {
+  position:relative;
+}
 
 .project_slide__image_placeholder {
   aspect-ratio: 4/3;
@@ -961,7 +1166,8 @@ img   { display:block; max-width:100%; }
 
 .our_projects__dots {
   position: absolute;
-  bottom:2.5rem; left:50%;
+  bottom:2.5rem;
+  left:50%;
   transform: translateX(-50%);
   display: flex;
   gap: .6rem;
@@ -969,12 +1175,15 @@ img   { display:block; max-width:100%; }
 }
 
 .our_projects__dot {
-  width:6px; height:6px;
+  width:6px;
+  height:6px;
   border-radius: 50%;
   background: rgba(255,255,255,.3);
   border: 1px solid rgba(255,255,255,.4);
   cursor: pointer;
-  transition: background .4s, width .4s, border-radius .4s;
+  transition: background .4s,
+              width .4s,
+              border-radius .4s;
 }
 
 .our_projects__dot--active {
@@ -986,7 +1195,8 @@ img   { display:block; max-width:100%; }
 
 .our_projects__counter {
   position: absolute;
-  bottom:2.5rem; right:3rem;
+  bottom:2.5rem;
+  right:3rem;
   font-family: var(--font-serif);
   font-style: italic;
   font-size: .85rem;
@@ -1016,7 +1226,8 @@ img   { display:block; max-width:100%; }
 /* Подсказка по центру — всегда поверх карточек */
 .gallery__hint {
   position: absolute;
-  top:50%; left:50%;
+  top:50%;
+  left:50%;
   transform: translate(-50%,-50%);
   z-index: 30;
   text-align: center;
@@ -1031,7 +1242,11 @@ img   { display:block; max-width:100%; }
   width: 240px;
 }
 
-.gallery__hint .label { color:var(--color-gold-mid); font-size:.7rem; margin-bottom:.4rem; }
+.gallery__hint .label {
+  color:var(--color-gold-mid);
+  font-size:.7rem;
+  margin-bottom:.4rem;
+}
 
 .gallery__hint-heading {
   font-family: var(--font-serif);
@@ -1040,7 +1255,10 @@ img   { display:block; max-width:100%; }
   line-height: 1.3;
 }
 
-.gallery__hint-heading em { font-style:italic; color:var(--color-gold-mid); }
+.gallery__hint-heading em {
+  font-style:italic;
+  color:var(--color-gold-mid);
+}
 
 .gallery__hint-sub {
   font-size: .78rem;
@@ -1051,7 +1269,8 @@ img   { display:block; max-width:100%; }
 /* Поле карточек */
 .gallery__field {
   position: relative;
-  width:100%; height:100%;
+  width:100%;
+  height:100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1067,7 +1286,8 @@ img   { display:block; max-width:100%; }
   box-shadow: var(--shadow-md);
   border: 2px solid rgba(255,255,255,.8);
   background: var(--color-surface);
-  top:50%; left:50%;
+  top:50%;
+  left:50%;
   transform: translate(-50%,-50%);
   z-index: 5;
   transition: box-shadow .3s var(--ease-default);
@@ -1102,7 +1322,8 @@ img   { display:block; max-width:100%; }
 .gallery__card-image img {
   position: absolute;
   inset: 0;
-  width:100%; height:100%;
+  width:100%;
+  height:100%;
   object-fit: cover;
   display: block;
 }
@@ -1132,7 +1353,10 @@ img   { display:block; max-width:100%; }
   transition: opacity .4s;
 }
 
-.lightbox--open { opacity:1; pointer-events:all; }
+.lightbox--open {
+  opacity:1;
+  pointer-events:all;
+}
 
 .lightbox__box {
   max-width: 880px;
@@ -1147,8 +1371,10 @@ img   { display:block; max-width:100%; }
 
 .lightbox__close {
   position: absolute;
-  top:1rem; right:1rem;
-  width:36px; height:36px;
+  top:1rem;
+  right:1rem;
+  width:36px;
+  height:36px;
   background: var(--color-bg-warm);
   border: 1px solid var(--color-border);
   border-radius: 50%;
@@ -1159,15 +1385,35 @@ img   { display:block; max-width:100%; }
   cursor: pointer;
   z-index: 2;
   color: var(--color-ink);
-  transition: background var(--duration), transform var(--duration);
+  transition: background var(--duration),
+              transform var(--duration);
 }
 
-.lightbox__close:hover { background:var(--color-ink); color:var(--color-cream); transform:rotate(90deg); }
+.lightbox__close:hover {
+  background:var(--color-ink);
+  color:var(--color-cream);
+  transform:rotate(90deg);
+}
 
-.lightbox__box--left   { display:grid; grid-template-columns:1fr 1fr; }
-.lightbox__box--right  { display:grid; grid-template-columns:1fr 1fr; }
-.lightbox__box--top    { display:flex; flex-direction:column; }
-.lightbox__box--bottom { display:flex; flex-direction:column-reverse; }
+.lightbox__box--left {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+.lightbox__box--right {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+.lightbox__box--top {
+  display:flex;
+  flex-direction:column;
+}
+
+.lightbox__box--bottom {
+  display:flex;
+  flex-direction:column-reverse;
+}
 
 .lightbox__image {
   min-height: 280px;
@@ -1181,9 +1427,20 @@ img   { display:block; max-width:100%; }
   border-radius: var(--radius-md) 0 0 var(--radius-md);
 }
 
-.lightbox__box--right  .lightbox__image { border-radius:0 var(--radius-md) var(--radius-md) 0; order:2; }
-.lightbox__box--top    .lightbox__image { border-radius:var(--radius-md) var(--radius-md) 0 0; min-height:220px; }
-.lightbox__box--bottom .lightbox__image { border-radius:0 0 var(--radius-md) var(--radius-md); min-height:220px; }
+.lightbox__box--right .lightbox__image {
+  border-radius:0 var(--radius-md) var(--radius-md) 0;
+  order:2;
+}
+
+.lightbox__box--top .lightbox__image {
+  border-radius:var(--radius-md) var(--radius-md) 0 0;
+  min-height:220px;
+}
+
+.lightbox__box--bottom .lightbox__image {
+  border-radius:0 0 var(--radius-md) var(--radius-md);
+  min-height:220px;
+}
 
 .lightbox__content {
   padding: 2.5rem;
@@ -1192,7 +1449,9 @@ img   { display:block; max-width:100%; }
   justify-content: center;
 }
 
-.lightbox__box--right .lightbox__content { order:1; }
+.lightbox__box--right .lightbox__content {
+  order:1;
+}
 
 .lightbox__category {
   font-size: .68rem;
@@ -1218,7 +1477,11 @@ img   { display:block; max-width:100%; }
   margin-bottom: 1.2rem;
 }
 
-.lightbox__tags { display:flex; flex-wrap:wrap; gap:.4rem; }
+.lightbox__tags {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.4rem;
+}
 
 .lightbox__tag {
   font-size: .72rem;
@@ -1262,7 +1525,9 @@ img   { display:block; max-width:100%; }
   color: var(--color-ink);
 }
 
-.pricing__rows { padding:.5rem 0; }
+.pricing__rows {
+  padding:.5rem 0;
+}
 
 .pricing__row {
   display: flex;
@@ -1273,8 +1538,13 @@ img   { display:block; max-width:100%; }
   transition: background var(--duration);
 }
 
-.pricing__row:last-child { border-bottom:none; }
-.pricing__row:hover { background:var(--color-bg-warm); }
+.pricing__row:last-child {
+  border-bottom:none;
+}
+
+.pricing__row:hover {
+  background:var(--color-bg-warm);
+}
 
 .pricing__row-name {
   font-size: .92rem;
@@ -1319,10 +1589,14 @@ img   { display:block; max-width:100%; }
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  transition: transform var(--duration), box-shadow var(--duration);
+  transition: transform var(--duration),
+              box-shadow var(--duration);
 }
 
-.how_we_work__step:hover { transform:translateY(-5px); box-shadow:var(--shadow-md); }
+.how_we_work__step:hover {
+  transform:translateY(-5px);
+  box-shadow:var(--shadow-md);
+}
 
 .how_we_work__connector {
   width: 2.5rem;
@@ -1371,7 +1645,11 @@ img   { display:block; max-width:100%; }
   font-size: .96rem;
 }
 
-.contact_us__links { display:flex; flex-direction:column; gap:.85rem; }
+.contact_us__links {
+  display:flex;
+  flex-direction:column;
+  gap:.85rem;
+}
 
 .contact_us__link {
   display: flex;
@@ -1382,7 +1660,9 @@ img   { display:block; max-width:100%; }
   border-radius: var(--radius-sm);
   padding: 1rem 1.2rem;
   box-shadow: var(--shadow-sm);
-  transition: transform var(--duration), box-shadow var(--duration), border-color var(--duration);
+  transition: transform var(--duration),
+              box-shadow var(--duration),
+              border-color var(--duration);
 }
 
 .contact_us__link:hover {
@@ -1392,7 +1672,8 @@ img   { display:block; max-width:100%; }
 }
 
 .contact_us__link-icon {
-  width:40px; height:40px;
+  width:40px;
+  height:40px;
   background: var(--color-bg-warm);
   border: 1px solid var(--color-border);
   border-radius: 10px;
@@ -1415,7 +1696,10 @@ img   { display:block; max-width:100%; }
   margin-bottom: .1rem;
 }
 
-.contact_us__link span { font-size:.76rem; color:var(--color-ink-faint); }
+.contact_us__link span {
+  font-size:.76rem;
+  color:var(--color-ink-faint);
+}
 
 .contact_us__card {
   background: var(--color-surface);
@@ -1432,7 +1716,10 @@ img   { display:block; max-width:100%; }
   margin-bottom: .9rem;
 }
 
-.contact_us__card p strong { color:var(--color-ink); font-weight:600; }
+.contact_us__card p strong {
+  color:var(--color-ink);
+  font-weight:600;
+}
 
 /* ============================================================
    ПОДВАЛ
@@ -1461,7 +1748,8 @@ img   { display:block; max-width:100%; }
 }
 
 .site_footer__logo-icon {
-  width:24px; height:24px;
+  width:24px;
+  height:24px;
   border: 1.5px solid var(--color-ink-muted);
   border-radius: 4px;
   display: flex;
@@ -1471,38 +1759,69 @@ img   { display:block; max-width:100%; }
 
 .site_footer__logo-icon::after {
   content: '';
-  width:5px; height:5px;
+  width:5px;
+  height:5px;
   background: var(--color-ink-muted);
   border-radius: 50%;
 }
 
-.site_footer__copy { font-size:.72rem; color:var(--color-ink-faint); }
+.site_footer__copy {
+  font-size:.72rem;
+  color:var(--color-ink-faint);
+}
 
 /* ============================================================
    АДАПТИВНОСТЬ — ПЛАНШЕТЫ (≤1024px)
    ============================================================ */
 @media (max-width: 1024px) {
-  .container { padding: 0 1.5rem; }
-  .navbar { padding: 1rem 1.5rem; }
-  .navbar__links { display: none; }
-  .navbar__cta { display: none; }
-  .navbar__burger { display: flex; }
+  .container {
+    padding: 0 1.5rem;
+  }
 
-  .hero__scroll { display: none; }
-  .about_us__grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  .contact_us__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .navbar {
+    padding: 1rem 1.5rem;
+  }
+
+  .navbar__links {
+    display: none;
+  }
+
+  .navbar__cta {
+    display: none;
+  }
+
+  .navbar__burger {
+    display: flex;
+  }
+
+  .hero__scroll {
+    display: none;
+  }
+
+  .about_us__grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .contact_us__grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
 
   .our_services__item {
     grid-template-columns: 1fr;
   }
+
   .our_services__item--reversed {
     direction: ltr;
   }
+
   .our_services__visual {
     min-height: 180px;
     border-left: none;
     border-top: 1px solid var(--color-border);
   }
+
   .our_services__item--reversed .our_services__visual {
     border-right: none;
     border-top: 1px solid var(--color-border);
@@ -1512,14 +1831,17 @@ img   { display:block; max-width:100%; }
     grid-template-columns: 1fr;
     gap: 2rem;
   }
+
   .project_slide__media {
     order: -1;
     max-width: 400px;
     margin: 0 auto;
   }
+
   .project_slide__text {
     text-align: center;
   }
+
   .project_slide__tags {
     justify-content: center;
   }
@@ -1528,9 +1850,11 @@ img   { display:block; max-width:100%; }
     flex-wrap: wrap;
     gap: 1rem;
   }
+
   .how_we_work__connector {
     display: none;
   }
+
   .how_we_work__step {
     flex: 1 1 calc(50% - 1rem);
     min-width: 250px;
@@ -1539,13 +1863,16 @@ img   { display:block; max-width:100%; }
   .gallery__card {
     width: 160px;
   }
+
   .lightbox__box--left,
   .lightbox__box--right {
     grid-template-columns: 1fr;
   }
+
   .lightbox__box--right .lightbox__image {
     order: -1;
   }
+
   .lightbox__image {
     min-height: 220px;
     border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
@@ -1559,9 +1886,11 @@ img   { display:block; max-width:100%; }
   .section {
     padding: 4rem 0;
   }
+
   .container {
     padding: 0 1.2rem;
   }
+
   .navbar {
     padding: 0.9rem 1.2rem;
   }
@@ -1570,18 +1899,23 @@ img   { display:block; max-width:100%; }
     padding: 6rem 0 3rem;
     min-height: auto;
   }
+
   .hero__title {
     font-size: clamp(2.2rem, 9vw, 3.2rem);
   }
+
   .hero__text {
     font-size: 0.92rem;
   }
+
   .hero__stats {
     gap: 1.5rem;
   }
+
   .stat__number {
     font-size: 1.8rem;
   }
+
   .hero__buttons {
     flex-direction: column;
     align-items: flex-start;
@@ -1590,19 +1924,24 @@ img   { display:block; max-width:100%; }
   .about_us__card {
     padding: 1.5rem;
   }
+
   .about_us__stats {
     grid-template-columns: 1fr 1fr;
     gap: 0.8rem;
   }
+
   .about_us__stat {
     padding: 1rem 0.5rem;
   }
+
   .about_us__stat-number {
     font-size: 1.6rem;
   }
+
   .about_us__features {
     gap: 0.6rem;
   }
+
   .about_us__feature {
     padding: 0.9rem 1rem;
   }
@@ -1610,9 +1949,11 @@ img   { display:block; max-width:100%; }
   .our_services__info {
     padding: 1.5rem;
   }
+
   .our_services__visual {
     min-height: 140px;
   }
+
   .our_services__visual-number {
     font-size: 3.5rem;
   }
@@ -1620,21 +1961,27 @@ img   { display:block; max-width:100%; }
   .our_projects {
     height: 400vh;
   }
+
   .our_projects__header {
     top: 1.5rem;
   }
+
   .project_slide {
     padding: 5rem 0 2rem;
   }
+
   .project_slide__title {
     font-size: 1.5rem;
   }
+
   .project_slide__description {
     font-size: 0.85rem;
   }
+
   .our_projects__dots {
     bottom: 1.5rem;
   }
+
   .our_projects__counter {
     bottom: 1.5rem;
     right: 1.2rem;
@@ -1644,13 +1991,16 @@ img   { display:block; max-width:100%; }
   .gallery {
     height: 220vh;
   }
+
   .gallery__hint {
     width: 200px;
     padding: 1.2rem 1.5rem;
   }
+
   .gallery__card {
     width: 130px;
   }
+
   .gallery__card-label {
     font-size: 0.65rem;
     padding: 0.4rem 0.6rem;
@@ -1659,13 +2009,16 @@ img   { display:block; max-width:100%; }
   .pricing__block-header {
     padding: 1rem 1.2rem;
   }
+
   .pricing__row {
     padding: 0.7rem 1.2rem;
     flex-wrap: wrap;
   }
+
   .pricing__row-dots {
     display: none;
   }
+
   .pricing__row-price {
     width: 100%;
     text-align: right;
@@ -1680,9 +2033,11 @@ img   { display:block; max-width:100%; }
   .contact_us__card {
     padding: 1.5rem;
   }
+
   .lightbox__content {
     padding: 1.5rem;
   }
+
   .lightbox__title {
     font-size: 1.3rem;
   }
@@ -1713,7 +2068,9 @@ img   { display:block; max-width:100%; }
   </ul>
   <a href="#contact_us" class="navbar__cta">Заказать →</a>
   <button class="navbar__burger" id="burger_btn">
-    <span></span><span></span><span></span>
+    <span></span>
+    <span></span>
+    <span></span>
   </button>
 </nav>
 
@@ -1758,12 +2115,23 @@ img   { display:block; max-width:100%; }
       <a href="#pricing" class="button button--outline">Смотреть цены</a>
     </div>
     <div class="hero__stats">
-      <div class="stat"><span class="stat__number">500+</span><span class="stat__label">Выполненных заказов</span></div>
-      <div class="stat"><span class="stat__number">98%</span><span class="stat__label">Довольных клиентов</span></div>
-      <div class="stat"><span class="stat__number">24ч</span><span class="stat__label">Срок выполнения</span></div>
+      <div class="stat">
+        <span class="stat__number">500+</span>
+        <span class="stat__label">Выполненных заказов</span>
+      </div>
+      <div class="stat">
+        <span class="stat__number">98%</span>
+        <span class="stat__label">Довольных клиентов</span>
+      </div>
+      <div class="stat">
+        <span class="stat__number">24ч</span>
+        <span class="stat__label">Срок выполнения</span>
+      </div>
     </div>
   </div>
-  <div class="hero__scroll"><div class="hero__scroll-line"></div></div>
+  <div class="hero__scroll">
+    <div class="hero__scroll-line"></div>
+  </div>
 </section>
 
 <!-- О НАС -->
@@ -1786,10 +2154,6 @@ img   { display:block; max-width:100%; }
               <div class="about_us__stat-number">24<em>ч</em></div>
               <div class="about_us__stat-label">Средний срок</div>
             </div>
-            <div class="about_us__stat">
-              <div class="about_us__stat-number">8<em>+</em></div>
-              <div class="about_us__stat-label">Инструментов</div>
-            </div>
           </div>
           <div class="about_us__tools-title">Что мы создаём</div>
           <div class="about_us__tools">
@@ -1799,8 +2163,8 @@ img   { display:block; max-width:100%; }
             <span class="about_us__tool">Видеореклама</span>
             <span class="about_us__tool">AI Анимация</span>
             <span class="about_us__tool">Фотореализм</span>
-            <span class="about_us__tool">AI Брендинг</span>
-            <span class="about_us__tool">AI Персонажи</span>
+            <span class="about_us__tool">WB карточки товаров</span>
+            <span class="about_us__tool">Кастомные визитки</span>
           </div>
         </div>
       </div>
@@ -1818,31 +2182,7 @@ img   { display:block; max-width:100%; }
           кинематографические видео, аватары, рекламный контент.
           Принимаем заказы любой сложности и срочности.
         </p>
-        <div class="about_us__features">
-          <div class="about_us__feature">
-            <div class="about_us__feature-icon">I</div>
-            <div class="about_us__feature-body">
-              <strong>Быстро</strong>
-              <p>Выполняем заказы от 2 до 48 часов — от аватарки до рекламного ролика</p>
-            </div>
-          </div>
-          <div class="about_us__feature">
-            <div class="about_us__feature-icon">II</div>
-            <div class="about_us__feature-body">
-              <strong>Точно</strong>
-              <p>До 3 правок включено в каждый заказ. Работаем до вашего одобрения</p>
-            </div>
-          </div>
-          <div class="about_us__feature">
-            <div class="about_us__feature-icon">III</div>
-            <div class="about_us__feature-body">
-              <strong>Конфиденциально</strong>
-              <p>NDA по запросу. Ваши материалы под надёжной защитой</p>
-            </div>
-          </div>
-        </div>
       </div>
-
     </div>
   </div>
 </section>
@@ -1864,14 +2204,16 @@ img   { display:block; max-width:100%; }
           <p class="our_services__description">Реалистичные портреты, продуктовые снимки, пейзажи и концепт-арт — полностью через AI. Никаких фотоаппаратов и студий, результат за несколько часов.</p>
           <ul class="our_services__features">
             <li class="our_services__list-item">Профессиональный портрет (1 изображение)</li>
-            <li class="our_services__list-item">Фото альбом — 20 уникальных кадров</li>
-            <li class="our_services__list-item">Карточки товаров для Wildberries</li>
             <li class="our_services__list-item">Рекламные визуалы под брендинг</li>
           </ul>
           <div class="our_services__price">от 100 ₽</div>
         </div>
         <div class="our_services__visual">
-          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <div class="our_services__visual-dots"></div>
           <div class="our_services__visual-content">
             <div class="our_services__visual-number">01</div>
@@ -1890,12 +2232,15 @@ img   { display:block; max-width:100%; }
             <li class="our_services__list-item">Видеореклама от 10 секунд</li>
             <li class="our_services__list-item">Рилсы и TikTok-ролики (30 сек)</li>
             <li class="our_services__list-item">Анимация логотипа и моушн-графика</li>
-            <li class="our_services__list-item">AI-аватар ведущего</li>
           </ul>
           <div class="our_services__price">от 2 000 ₽</div>
         </div>
         <div class="our_services__visual">
-          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <div class="our_services__visual-dots"></div>
           <div class="our_services__visual-content">
             <div class="our_services__visual-number">02</div>
@@ -1918,7 +2263,11 @@ img   { display:block; max-width:100%; }
           <div class="our_services__price">от 250 ₽</div>
         </div>
         <div class="our_services__visual">
-          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <div class="our_services__visual-dots"></div>
           <div class="our_services__visual-content">
             <div class="our_services__visual-number">03</div>
@@ -1941,7 +2290,11 @@ img   { display:block; max-width:100%; }
           <div class="our_services__price">от 500 ₽</div>
         </div>
         <div class="our_services__visual">
-          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <div class="our_services__visual-dots"></div>
           <div class="our_services__visual-content">
             <div class="our_services__visual-number">04</div>
@@ -1953,22 +2306,24 @@ img   { display:block; max-width:100%; }
       <div class="our_services__item" data-direction="left">
         <div class="our_services__info">
           <div class="our_services__icon">biz</div>
-          <h3 class="our_services__title">Контент для бизнеса</h3>
-          <p class="our_services__description">Системное визуальное сопровождение: рекламные материалы, посты, баннеры, презентации и брендинг-паки под ваш фирменный стиль.</p>
+          <h3 class="our_services__title">Фото альбомы</h3>
+          <p class="our_services__description">Создаем уникальные фотоальбомы: свадебные, корпоративные, выпускные.</p>
           <ul class="our_services__features">
-            <li class="our_services__list-item">Контент-план и регулярные посты</li>
-            <li class="our_services__list-item">Рекламные баннеры для кампаний</li>
-            <li class="our_services__list-item">Презентации для инвесторов и клиентов</li>
-            <li class="our_services__list-item">Брендинг-паки с AI-визуалами</li>
+            <li class="our_services__list-item">Фотоальбомы в различных стилях</li>
+            <li class="our_services__list-item">Фотоальбомы с персонализированными элементами</li>
           </ul>
           <div class="our_services__price">от 3 000 ₽</div>
         </div>
         <div class="our_services__visual">
-          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <div class="our_services__visual-dots"></div>
           <div class="our_services__visual-content">
             <div class="our_services__visual-number">05</div>
-            <div class="our_services__visual-label">Business</div>
+            <div class="our_services__visual-label">Photo Albums</div>
           </div>
         </div>
       </div>
@@ -1987,7 +2342,11 @@ img   { display:block; max-width:100%; }
           <div class="our_services__price">по запросу</div>
         </div>
         <div class="our_services__visual">
-          <div class="our_services__visual-lines"><span></span><span></span><span></span></div>
+          <div class="our_services__visual-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <div class="our_services__visual-dots"></div>
           <div class="our_services__visual-content">
             <div class="our_services__visual-number">06</div>
@@ -2021,8 +2380,8 @@ img   { display:block; max-width:100%; }
           <div class="project_slide__text">
             <span class="project_slide__number">01 / 04</span>
             <div class="project_slide__category">AI Фотография</div>
-            <h3 class="project_slide__title">Реалистичный портрет для бренда</h3>
-            <p class="project_slide__description">Серия из 12 корпоративных портретов для сайта клиента без фотосессии — полностью через AI за 4 часа. Клиент сэкономил более 80 000 ₽ на съёмке.</p>
+            <h3 class="project_slide__title">Реалистичный портрет для рекламы бренда</h3>
+            <p class="project_slide__description">Фото создано с использованием AI-технологий, полностью реалистично и в стиле корпоративной рекламы.</p>
             <div class="project_slide__tags">
               <span class="project_slide__tag">AI Генерация</span>
               <span class="project_slide__tag">Фотореализм</span>
@@ -2043,13 +2402,13 @@ img   { display:block; max-width:100%; }
           <div class="project_slide__text">
             <span class="project_slide__number">02 / 04</span>
             <div class="project_slide__category">AI Видео</div>
-            <h3 class="project_slide__title">Рекламный ролик 30 секунд</h3>
-            <p class="project_slide__description">Кинематографический рекламный ролик для интернет-магазина без актёров. Производство 2 дня. После запуска конверсия выросла на 23%.</p>
+            <h3 class="project_slide__title">Рекламный ролик от 10 секунд</h3>
+            <p class="project_slide__description">Кинематографический рекламный ролик без актёров. Производство 2 дня. После запуска конверсия выросла на 23%.</p>
             <div class="project_slide__tags">
               <span class="project_slide__tag">AI Видео</span>
               <span class="project_slide__tag">Кинематограф</span>
               <span class="project_slide__tag">Реклама</span>
-              <span class="project_slide__tag">30 сек</span>
+              <span class="project_slide__tag">от 10 сек</span>
             </div>
           </div>
           <div class="project_slide__media">
@@ -2066,10 +2425,10 @@ img   { display:block; max-width:100%; }
             <span class="project_slide__number">03 / 04</span>
             <div class="project_slide__category">Маркетплейсы</div>
             <h3 class="project_slide__title">Карточки товаров для Wildberries</h3>
-            <p class="project_slide__description">Пакет из 40 карточек: разные ракурсы, инфографика, рекламные баннеры. CTR вырос на 34% за первый месяц.</p>
+            <p class="project_slide__description">Пакет из 10 карточек: разные ракурсы, инфографика, рекламные баннеры. CTR вырос на 34% за первый месяц.</p>
             <div class="project_slide__tags">
               <span class="project_slide__tag">Wildberries</span>
-              <span class="project_slide__tag">40 карточек</span>
+              <span class="project_slide__tag">5-10 карточек</span>
               <span class="project_slide__tag">CTR +34%</span>
             </div>
           </div>
@@ -2087,10 +2446,10 @@ img   { display:block; max-width:100%; }
             <span class="project_slide__number">04 / 04</span>
             <div class="project_slide__category">AI Аватарки</div>
             <h3 class="project_slide__title">AI-аватар для YouTube канала</h3>
-            <p class="project_slide__description">Персонаж-ведущий для YouTube-канала: набор из 20 выражений лица и поз, несколько образов под разные рубрики.</p>
+            <p class="project_slide__description">Персонаж-ведущий для YouTube-канала.</p>
             <div class="project_slide__tags">
               <span class="project_slide__tag">YouTube</span>
-              <span class="project_slide__tag">20 образов</span>
+              <span class="project_slide__tag">5 образов</span>
               <span class="project_slide__tag">AI Аватар</span>
             </div>
           </div>
@@ -2162,7 +2521,7 @@ img   { display:block; max-width:100%; }
         <div class="gallery__card-image" style="background:linear-gradient(135deg,#a08060,#c4a882)">
           06
         </div>
-        <div class="gallery__card-label">Брендинг</div>
+        <div class="gallery__card-label">Фото альбом</div>
       </div>
 
     </div>
@@ -2256,41 +2615,6 @@ img   { display:block; max-width:100%; }
   </div>
 </section>
 
-<!-- КАК МЫ РАБОТАЕМ -->
-<section class="section" id="how_we_work">
-  <div class="container">
-    <div class="section__header">
-      <div class="label">Процесс</div>
-      <h2 class="heading">Как мы <em>работаем</em></h2>
-    </div>
-    <div class="how_we_work__steps">
-      <div class="how_we_work__step">
-        <span class="how_we_work__step-number">01</span>
-        <h3 class="how_we_work__step-title">Бриф</h3>
-        <p class="how_we_work__step-text">Вы описываете задачу — стиль, тематику, формат, цель. Чем детальнее бриф, тем точнее результат с первой попытки.</p>
-      </div>
-      <div class="how_we_work__connector"></div>
-      <div class="how_we_work__step">
-        <span class="how_we_work__step-number">02</span>
-        <h3 class="how_we_work__step-title">Согласование</h3>
-        <p class="how_we_work__step-text">Уточняем детали, согласуем концепцию и стоимость. Подписываем договор или NDA по запросу.</p>
-      </div>
-      <div class="how_we_work__connector"></div>
-      <div class="how_we_work__step">
-        <span class="how_we_work__step-number">03</span>
-        <h3 class="how_we_work__step-title">Генерация</h3>
-        <p class="how_we_work__step-text">Наши специалисты работают с AI-инструментами, подбирая лучшие решения. Показываем промежуточные результаты.</p>
-      </div>
-      <div class="how_we_work__connector"></div>
-      <div class="how_we_work__step">
-        <span class="how_we_work__step-number">04</span>
-        <h3 class="how_we_work__step-title">Сдача</h3>
-        <p class="how_we_work__step-text">Вносим до 3 правок бесплатно и передаём финальный файл в нужном формате и разрешении.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- КОНТАКТЫ -->
 <section class="section section--warm" id="contact_us">
   <div class="container">
@@ -2365,8 +2689,8 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ---- Бургер-меню ---- */
-const burgerBtn   = document.getElementById('burger_btn');
-const mobileMenuEl= document.getElementById('mobile_menu');
+const burgerBtn    = document.getElementById('burger_btn');
+const mobileMenuEl = document.getElementById('mobile_menu');
 
 burgerBtn.addEventListener('click', () => {
   burgerBtn.classList.toggle('navbar__burger--open');
@@ -2388,34 +2712,81 @@ gsap.timeline({ defaults: { ease: 'power3.out' } })
 
 /* ---- О нас: вылет блоков слева и справа ---- */
 gsap.from('#about_left', {
-  scrollTrigger: { trigger:'#about_us', start:'top 80%', toggleActions:'play reverse play reverse' },
-  x: isMobile ? -40 : -80, opacity:0, duration:.9, ease:'power3.out'
+  scrollTrigger: {
+    trigger:'#about_us',
+    start:'top 80%',
+    toggleActions:'play reverse play reverse'
+  },
+  x: isMobile ? -40 : -80,
+  opacity:0,
+  duration:.9,
+  ease:'power3.out'
 });
+
 gsap.from('#about_right', {
-  scrollTrigger: { trigger:'#about_us', start:'top 80%', toggleActions:'play reverse play reverse' },
-  x: isMobile ? 40 : 80, opacity:0, duration:.9, delay:.15, ease:'power3.out'
+  scrollTrigger: {
+    trigger:'#about_us',
+    start:'top 80%',
+    toggleActions:'play reverse play reverse'
+  },
+  x: isMobile ? 40 : 80,
+  opacity:0,
+  duration:.9,
+  delay:.15,
+  ease:'power3.out'
 });
+
 gsap.from('.about_us__feature', {
-  scrollTrigger: { trigger:'.about_us__features', start:'top 88%', toggleActions:'play reverse play reverse' },
-  y:30, opacity:0, stagger:.1, duration:.6, ease:'power2.out'
+  scrollTrigger: {
+    trigger:'.about_us__features',
+    start:'top 88%',
+    toggleActions:'play reverse play reverse'
+  },
+  y:30,
+  opacity:0,
+  stagger:.1,
+  duration:.6,
+  ease:'power2.out'
 });
+
 gsap.from('.about_us__tool', {
-  scrollTrigger: { trigger:'.about_us__tools', start:'top 92%', toggleActions:'play reverse play reverse' },
-  scale:.8, opacity:0, stagger:.04, duration:.4, ease:'back.out(1.7)'
+  scrollTrigger: {
+    trigger:'.about_us__tools',
+    start:'top 92%',
+    toggleActions:'play reverse play reverse'
+  },
+  scale:.8,
+  opacity:0,
+  stagger:.04,
+  duration:.4,
+  ease:'back.out(1.7)'
 });
 
 /* ---- Услуги: поочерёдно слева / справа с реверсом ---- */
 gsap.from('#services_header', {
-  scrollTrigger: { trigger:'#our_services', start:'top 80%', toggleActions:'play reverse play reverse' },
-  y:40, opacity:0, duration:.8, ease:'power3.out'
+  scrollTrigger: {
+    trigger:'#our_services',
+    start:'top 80%',
+    toggleActions:'play reverse play reverse'
+  },
+  y:40,
+  opacity:0,
+  duration:.8,
+  ease:'power3.out'
 });
 
 document.querySelectorAll('.our_services__item').forEach(item => {
-  const fromX = item.dataset.direction === 'right' ? (isMobile ? 60 : 120) : (isMobile ? -60 : -120);
+  const fromX = item.dataset.direction === 'right'
+    ? (isMobile ? 60 : 120)
+    : (isMobile ? -60 : -120);
+
   gsap.fromTo(item,
     { x: fromX, opacity: 0 },
     {
-      x: 0, opacity: 1, duration: .9, ease: 'power3.out',
+      x: 0,
+      opacity: 1,
+      duration: .9,
+      ease: 'power3.out',
       scrollTrigger: {
         trigger: item,
         start: 'top 92%',
@@ -2428,32 +2799,79 @@ document.querySelectorAll('.our_services__item').forEach(item => {
 
 /* ---- Прайс: слева и справа ---- */
 gsap.from('#pricing_photos', {
-  scrollTrigger: { trigger:'#pricing_photos', start:'top 85%', toggleActions:'play reverse play reverse' },
-  x: isMobile ? -30 : -70, opacity:0, duration:.85, ease:'power3.out'
+  scrollTrigger: {
+    trigger:'#pricing_photos',
+    start:'top 85%',
+    toggleActions:'play reverse play reverse'
+  },
+  x: isMobile ? -30 : -70,
+  opacity:0,
+  duration:.85,
+  ease:'power3.out'
 });
+
 gsap.from('#pricing_video', {
-  scrollTrigger: { trigger:'#pricing_video', start:'top 85%', toggleActions:'play reverse play reverse' },
-  x: isMobile ? 30 : 70, opacity:0, duration:.85, ease:'power3.out'
+  scrollTrigger: {
+    trigger:'#pricing_video',
+    start:'top 85%',
+    toggleActions:'play reverse play reverse'
+  },
+  x: isMobile ? 30 : 70,
+  opacity:0,
+  duration:.85,
+  ease:'power3.out'
 });
 
 /* ---- Как мы работаем ---- */
 gsap.from('#how_we_work .section__header', {
-  scrollTrigger: { trigger:'#how_we_work', start:'top 80%', toggleActions:'play reverse play reverse' },
-  y:40, opacity:0, duration:.8, ease:'power3.out'
+  scrollTrigger: {
+    trigger:'#how_we_work',
+    start:'top 80%',
+    toggleActions:'play reverse play reverse'
+  },
+  y:40,
+  opacity:0,
+  duration:.8,
+  ease:'power3.out'
 });
+
 gsap.from('.how_we_work__step', {
-  scrollTrigger: { trigger:'.how_we_work__steps', start:'top 80%', toggleActions:'play reverse play reverse' },
-  y:50, opacity:0, stagger:.12, duration:.75, ease:'power3.out'
+  scrollTrigger: {
+    trigger:'.how_we_work__steps',
+    start:'top 80%',
+    toggleActions:'play reverse play reverse'
+  },
+  y:50,
+  opacity:0,
+  stagger:.12,
+  duration:.75,
+  ease:'power3.out'
 });
 
 /* ---- Контакты ---- */
 gsap.from('#contact_left', {
-  scrollTrigger: { trigger:'#contact_us', start:'top 80%', toggleActions:'play reverse play reverse' },
-  x: isMobile ? -30 : -60, opacity:0, duration:.9, ease:'power3.out'
+  scrollTrigger: {
+    trigger:'#contact_us',
+    start:'top 80%',
+    toggleActions:'play reverse play reverse'
+  },
+  x: isMobile ? -30 : -60,
+  opacity:0,
+  duration:.9,
+  ease:'power3.out'
 });
+
 gsap.from('#contact_right', {
-  scrollTrigger: { trigger:'#contact_us', start:'top 80%', toggleActions:'play reverse play reverse' },
-  x: isMobile ? 30 : 60, opacity:0, duration:.9, delay:.15, ease:'power3.out'
+  scrollTrigger: {
+    trigger:'#contact_us',
+    start:'top 80%',
+    toggleActions:'play reverse play reverse'
+  },
+  x: isMobile ? 30 : 60,
+  opacity:0,
+  duration:.9,
+  delay:.15,
+  ease:'power3.out'
 });
 
 /* ---- Наши проекты: скролл переключает слайды ---- */
@@ -2504,7 +2922,10 @@ gsap.from('#contact_right', {
           slide.querySelector('.project_slide__media')
         ].filter(Boolean);
         gsap.to(els, {
-          opacity:0, y:-30, duration:.5, ease:'power2.in',
+          opacity:0,
+          y:-30,
+          duration:.5,
+          ease:'power2.in',
           onComplete: () => {
             slide.classList.remove('project_slide--active');
             gsap.set(els, { y: 0 });
@@ -2591,12 +3012,54 @@ gsap.from('#contact_right', {
 /* ---- Лайтбокс для галереи ---- */
 (function() {
   const CARDS_DATA = [
-    { category:'AI Фотография', title:'Корпоративный портрет',      text:'Серия из 12 портретов для корпоративного сайта без фотосессии. AI-генерация за 4 часа — клиент сэкономил 80 000 ₽.', tags:['Портрет','Корпоратив','4 часа'],   layout:'left',   gradient:'linear-gradient(135deg,#3d3629,#6b6155)' },
-    { category:'AI Видео',      title:'Рекламный ролик 30 сек',     text:'Кинематографический ролик для интернет-магазина. 2 дня производства, рост конверсии +23%.',                          tags:['Реклама','Видео','30 сек'],        layout:'right',  gradient:'linear-gradient(135deg,#2c2519,#a08060)' },
-    { category:'Маркетплейсы',  title:'Карточки для Wildberries',   text:'40 карточек товара: разные ракурсы, инфографика, баннеры. CTR вырос на 34% за первый месяц.',                        tags:['Wildberries','40 карточек'],       layout:'bottom', gradient:'linear-gradient(135deg,#6b6155,#c4a882)' },
-    { category:'AI Аватар',     title:'Персонаж для YouTube',       text:'Ведущий-аватар для YouTube-канала: 20 выражений лица и поз, несколько образов под разные рубрики.',                   tags:['YouTube','20 образов'],            layout:'top',    gradient:'linear-gradient(135deg,#1c1812,#3d3629)' },
-    { category:'AI Видео',      title:'Рилс для бренда одежды',     text:'30-секундный рилс для Instagram. AI-генерация образов модели и одежды в разных локациях.',                           tags:['Instagram','Fashion','30 сек'],    layout:'left',   gradient:'linear-gradient(135deg,#9b9088,#ede8df)' },
-    { category:'Брендинг',      title:'Фирменный стиль AI-студии',  text:'Пакет из 40 AI-визуалов для брендинга: паттерны, иллюстрации, шаблоны соцсетей под единый стиль.',                   tags:['Брендинг','40 визуалов','Стиль'],  layout:'right',  gradient:'linear-gradient(135deg,#a08060,#c4a882)' },
+    {
+      category:'AI Фотография',
+      title:'Корпоративный портрет',
+      text:'Серия из 12 портретов для корпоративного сайта без фотосессии. AI-генерация за 4 часа — клиент сэкономил 80 000 ₽.',
+      tags:['Портрет','Корпоратив','4 часа'],
+      layout:'left',
+      gradient:'linear-gradient(135deg,#3d3629,#6b6155)'
+    },
+    {
+      category:'AI Видео',
+      title:'Рекламный ролик 30 сек',
+      text:'Кинематографический ролик для интернет-магазина. 2 дня производства, рост конверсии +23%.',
+      tags:['Реклама','Видео','30 сек'],
+      layout:'right',
+      gradient:'linear-gradient(135deg,#2c2519,#a08060)'
+    },
+    {
+      category:'Маркетплейсы',
+      title:'Карточки для Wildberries',
+      text:'40 карточек товара: разные ракурсы, инфографика, баннеры. CTR вырос на 34% за первый месяц.',
+      tags:['Wildberries','40 карточек'],
+      layout:'bottom',
+      gradient:'linear-gradient(135deg,#6b6155,#c4a882)'
+    },
+    {
+      category:'AI Аватар',
+      title:'Персонаж для YouTube',
+      text:'Ведущий-аватар для YouTube-канала: 20 выражений лица и поз, несколько образов под разные рубрики.',
+      tags:['YouTube','20 образов'],
+      layout:'top',
+      gradient:'linear-gradient(135deg,#1c1812,#3d3629)'
+    },
+    {
+      category:'AI Видео',
+      title:'Рилс для бренда одежды',
+      text:'30-секундный рилс для Instagram. AI-генерация образов модели и одежды в разных локациях.',
+      tags:['Instagram','Fashion','30 сек'],
+      layout:'left',
+      gradient:'linear-gradient(135deg,#9b9088,#ede8df)'
+    },
+    {
+      category:'Брендинг',
+      title:'Фирменный стиль AI-студии',
+      text:'Пакет из 40 AI-визуалов для брендинга: паттерны, иллюстрации, шаблоны соцсетей под единый стиль.',
+      tags:['Брендинг','40 визуалов','Стиль'],
+      layout:'right',
+      gradient:'linear-gradient(135deg,#a08060,#c4a882)'
+    },
   ];
 
   const lightbox      = document.getElementById('lightbox');
@@ -2608,7 +3071,9 @@ gsap.from('#contact_right', {
       const data = CARDS_DATA[parseInt(card.dataset.cardIndex)];
       if (!data) return;
 
-      while (lightboxBox.children.length > 1) lightboxBox.removeChild(lightboxBox.lastChild);
+      while (lightboxBox.children.length > 1) {
+        lightboxBox.removeChild(lightboxBox.lastChild);
+      }
 
       lightboxBox.className = 'lightbox__box lightbox__box--' + data.layout;
 
@@ -2641,8 +3106,12 @@ gsap.from('#contact_right', {
   }
 
   lightboxClose.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
 })();
 </script>
 </body>
